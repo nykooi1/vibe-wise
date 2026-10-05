@@ -3,6 +3,7 @@
 import importlib.util
 import json
 from pathlib import Path
+import stat
 import subprocess
 import sys
 import tempfile
@@ -171,7 +172,10 @@ class ResetTests(unittest.TestCase):
         outside = self.root / "outside"
         outside.mkdir()
         target, originals = self.notes(outside)
-        (self.project / ".vibe-wise").symlink_to(target, target_is_directory=True)
+        try:
+            (self.project / ".vibe-wise").symlink_to(target, target_is_directory=True)
+        except OSError:
+            self.skipTest("Creating symlinks requires elevated privilege or Developer Mode on Windows")
         self.assertEqual(self.preview()["status"], "no_notes")
         self.assert_originals(target, originals)
 
@@ -179,10 +183,13 @@ class ResetTests(unittest.TestCase):
         state, _ = self.notes()
         path = state / "profile.md"
         path.unlink()
-        path.symlink_to(state / "progress.md")
-        with self.assertRaisesRegex(ValueError, "non-regular"):
-            self.preview()
-        path.unlink()
+        try:
+            path.symlink_to(state / "progress.md")
+            with self.assertRaisesRegex(ValueError, "non-regular"):
+                self.preview()
+            path.unlink()
+        except OSError:
+            pass
         path.mkdir()
         with self.assertRaisesRegex(ValueError, "non-regular"):
             self.preview()
@@ -192,11 +199,48 @@ class ResetTests(unittest.TestCase):
         state, originals = self.notes()
         outside = self.root / "outside"
         outside.mkdir()
-        (state / "backups").symlink_to(outside, target_is_directory=True)
+        try:
+            (state / "backups").symlink_to(outside, target_is_directory=True)
+        except OSError:
+            self.skipTest("Creating symlinks requires elevated privilege or Developer Mode on Windows")
         with self.assertRaisesRegex(ValueError, "Backup path"):
             self.confirm()
         self.assert_originals(state, originals)
         self.assertEqual(list(outside.iterdir()), [])
+
+    def test_mocked_symlinked_state_rejected(self):
+        state, originals = self.notes()
+        real_is_symlink = Path.is_symlink
+        def fake_is_symlink(path):
+            if path.name == ".vibe-wise":
+                return True
+            return real_is_symlink(path)
+        with patch.object(Path, "is_symlink", fake_is_symlink):
+            self.assertEqual(self.preview()["status"], "no_notes")
+
+    def test_mocked_symlink_note_rejected(self):
+        state, _ = self.notes()
+        real_lstat = Path.lstat
+        class FakeStat:
+            st_mode = stat.S_IFLNK | 0o777
+        def fake_lstat(path):
+            if path.name == "profile.md":
+                return FakeStat()
+            return real_lstat(path)
+        with patch.object(Path, "lstat", fake_lstat):
+            with self.assertRaisesRegex(ValueError, "non-regular"):
+                self.preview()
+
+    def test_mocked_symlinked_backup_directory_rejected(self):
+        state, originals = self.notes()
+        real_is_symlink = Path.is_symlink
+        def fake_is_symlink(path):
+            if path.name == "backups":
+                return True
+            return real_is_symlink(path)
+        with patch.object(Path, "is_symlink", fake_is_symlink):
+            with self.assertRaisesRegex(ValueError, "Backup path"):
+                self.confirm()
 
     def test_backup_failure_does_not_modify_active_notes(self):
         state, originals = self.notes()

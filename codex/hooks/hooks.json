@@ -1,0 +1,18 @@
+{
+  "description": "Restore local VibeWise learning context when a session starts or compacts.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"${PLUGIN_ROOT}/hooks/session_start.py\"",
+            "timeout": 5,
+            "statusMessage": "Loading VibeWise learning context"
+          }
+        ]
+      }
+    ]
+  }
+}

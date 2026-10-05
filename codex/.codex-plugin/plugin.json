@@ -1,0 +1,15 @@
+{
+  "name": "vibe-wise",
+  "version": "0.1.43-codex.1",
+  "description": "Mindful pair programming that keeps you in the driver's seat",
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "VibeWise",
+    "shortDescription": "Mindful pair programming that keeps you in the driver's seat",
+    "developerName": "Noah Kim",
+    "category": "Productivity",
+    "composerIcon": "./assets/vibewise-icon.png",
+    "logo": "./assets/vibewise-icon.png"
+  }
+}

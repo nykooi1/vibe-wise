@@ -1,0 +1,12 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# User notes directory when testing locally
+.vibe-wise/
+.sensible-vibes/
+
+# Local design arena & research notes
+docs/design/

@@ -10,9 +10,11 @@ For anyone who wants to learn as they build—whether you're an aspiring enginee
 
 ## Get started
 
-You need [Claude Code](https://code.claude.com/docs/en/setup) and
-[Python 3](https://www.python.org/downloads/). VibeWise uses Python to restore
-learning context and reset learning notes. No extra Python packages are needed.
+You need [Python 3](https://www.python.org/downloads/) (`python` on Windows, `python3` on Unix). VibeWise uses Python to restore learning context and reset learning notes. No extra Python packages are needed.
+
+### Claude Code
+
+You need [Claude Code](https://code.claude.com/docs/en/setup).
 
 VibeWise has been approved for Anthropic's Claude directory, but isn't listed in
 the public community marketplace yet. I expect it to appear soon. In the meantime,
@@ -40,6 +42,33 @@ Restart Claude Code in the project you want to work on, then run:
 ```
 
 Setup asks one question at a time. Use the arrow keys and Enter for choices; pick **Use defaults** to skip preference setup. Then ask Claude to build something. Starting fresh or joining an unfamiliar repository both work. For an existing repository, Claude first inspects the code and sketches a small system map.
+
+### Codex
+
+VibeWise provides a native plugin bundle for Codex in `codex/`.
+
+1. Add the marketplace:
+
+```sh
+codex plugin marketplace add nykooi1/vibe-wise
+```
+
+Or for local development from the repository root:
+
+```sh
+codex plugin marketplace add .
+```
+
+2. Install the plugin:
+
+```sh
+codex plugin add vibe-wise@vibe-wise
+```
+
+3. Review and trust the `SessionStart` context-restoration hook via `/hooks` in Codex.
+4. Launch Codex in your project and activate learning with `$learn`, or reset notes with `$reset`.
+
+For detailed Codex usage and architecture, see [codex/README.md](codex/README.md).
 
 ## What it feels like
 

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Reset VibeWise Learning"
+  short_description: "Back up learning notes and restart onboarding after confirmation"
+  default_prompt: "Use $reset to preview and confirm resetting learning notes for this project."
+
+policy:
+  allow_implicit_invocation: false
