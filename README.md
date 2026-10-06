@@ -8,6 +8,14 @@ A Claude Code plugin that puts learning first and keeps you in control while AI 
 
 For anyone who wants to learn as they build—whether you're an aspiring engineer, a junior developer, or an experienced engineer exploring an unfamiliar stack. Practice planning how the pieces fit together, anticipating failures, and checking the result while keeping ownership of the decisions.
 
+## GPT / Codex alternative
+
+For GPT-based assistants, see the [GPT / Codex adapter](adapters/gpt/README.md).
+It includes a Codex skill and a standalone prompt for other GPT chats, preserving
+the learning-first workflow. Project notes can be resumed by invoking the skill;
+this adapter does not include automatic session hooks. Helper tests are available,
+but teaching behavior across GPT models has not yet been evaluated.
+
 ## Get started
 
 You need [Claude Code](https://code.claude.com/docs/en/setup) and

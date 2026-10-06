@@ -1,0 +1,4 @@
+interface:
+  display_name: "VibeWise for GPT"
+  short_description: "Learn engineering while AI implements your design"
+  default_prompt: "Use $vibe-wise to help me learn while we build, starting with my approach and explaining the agreed implementation."
