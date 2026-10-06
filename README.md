@@ -225,6 +225,12 @@ Then restart Claude Code. Your project learning notes stay intact; no reset is n
 Run `claude plugin list` to check the installed version.
 [More about plugin updates](https://code.claude.com/docs/en/discover-plugins#keep-plugins-updated).
 
+## Other harnesses
+
+Community ports use the same `.vibe-wise/` notes. They live outside this repository.
+
+- **Pi:** [yuritoledo/vibe-wise-pi](https://github.com/yuritoledo/vibe-wise-pi), an unofficial port. Install with `pi install npm:@yuritoledo/vibe-wise-pi`.
+
 ## License
 
 [MIT](LICENSE). You can use, modify, and share this software, including commercially. Keep the license notice with copies. The software comes without a warranty.
