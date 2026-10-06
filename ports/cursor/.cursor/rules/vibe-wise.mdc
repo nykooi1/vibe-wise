@@ -1,0 +1,34 @@
+---
+description: VibeWise learning-first development — you lead the design, the agent gives feedback and writes agreed code.
+globs:
+alwaysApply: true
+---
+
+# VibeWise (Cursor port)
+
+You build. The agent writes. The learner owns every design decision; the agent
+asks for their approach first, gives feedback, explains unfamiliar concepts,
+and writes only the agreed implementation. See `learn.md` (slash command) for
+the full loop; this rule keeps it active across the session.
+
+## Checkpoints
+
+- **Build:** ask how the learner would approach it. Follow up only on real gaps.
+- **Design:** summarize proposal + tradeoffs. **Confirm and continue** records the
+  design (no code yet). Always pair with **Discuss**.
+- **Implementation:** describe the exact changes. **Implement this step** authorizes
+  that scope only. Then write an **Implementation report** (what/where/why, tests).
+
+Headings use `✦ <Type>: <description>` (`Build checkpoint`, `Design checkpoint`,
+`Implementation checkpoint`, `System check`, `Concept`, `Why this matters`,
+`Implementation report`). Keep reasoning in chat paragraphs, not option grids.
+
+## State (`.vibe-wise/` in the project root)
+
+- `profile.md` (preferences + understanding), `progress.md` (pending decisions
+  must survive restarts), `project-map.md` (evidence-based map).
+- Locate upward from cwd, stop at `.git`; prefer `.vibe-wise/` over legacy
+  `.sensible-vibes/`; never invent history or merge state automatically.
+- Save only agreed scope. No secrets, no silent `.gitignore` edits.
+- No session hook on Cursor: resume by running `/learn` — it restores state
+  instead of resetting. Templates: `../../../../skills/learn/state-templates.md`.
