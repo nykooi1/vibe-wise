@@ -48,8 +48,9 @@ class SessionStartTests(unittest.TestCase):
             "hook_event_name": "SessionStart", "source": source,
             "cwd": str(cwd or self.project),
         })
+        cmd = REGISTRATION["hooks"][0]["command"].replace("${CLAUDE_PLUGIN_ROOT}", str(ROOT))
         result = subprocess.run(
-            REGISTRATION["hooks"][0]["command"], shell=True,
+            cmd, shell=True,
             input=payload, text=True, capture_output=True, timeout=5,
             # The hook needs a Python executable and its plugin location, not the
             # developer's credentials or unrelated environment configuration.
@@ -251,6 +252,40 @@ class SessionStartTests(unittest.TestCase):
         self.assertIn("Restarting or compacting is not approval", context)
         self.assertNotIn("Use SQLite", context)
         self.assertNotIn("JSON storage", context)
+
+    def test_antigravity_pre_invocation_restores_active_state(self):
+        state = self.state()
+        payload = json.dumps({
+            "workspacePaths": [str(self.project)],
+            "invocationNum": 1,
+            "conversationId": "test-convo-123"
+        })
+        result = self.run_hook(raw=payload)
+        self.assertIsNotNone(result)
+        self.assertIn("injectSteps", result)
+        self.assertEqual(len(result["injectSteps"]), 1)
+        ephemeral = result["injectSteps"][0]["ephemeralMessage"]
+        self.assertIn("VibeWise is active for this project", ephemeral)
+        self.assertIn(str(state), ephemeral)
+
+    def test_antigravity_pre_invocation_inactive_state(self):
+        payload = json.dumps({
+            "workspacePaths": [str(self.project)],
+            "invocationNum": 1,
+            "conversationId": "test-convo-123"
+        })
+        result = self.run_hook(raw=payload)
+        self.assertIsNone(result)
+
+    def test_antigravity_pre_invocation_skips_subsequent_turns(self):
+        state = self.state()
+        payload = json.dumps({
+            "workspacePaths": [str(self.project)],
+            "invocationNum": 2,
+            "conversationId": "test-convo-123"
+        })
+        result = self.run_hook(raw=payload)
+        self.assertIsNone(result)
 
 
 if __name__ == "__main__":

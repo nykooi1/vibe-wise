@@ -1,0 +1,9 @@
+{
+  "name": "vibe-wise",
+  "version": "0.1.43",
+  "description": "You build. AI writes. Learn how to build software while Antigravity (AGY) writes the code.",
+  "author": { "name": "Noah Kim (adapted for AGY)" },
+  "repository": "https://github.com/nykooi1/vibe-wise",
+  "license": "MIT",
+  "keywords": ["learning", "architecture", "engineering", "antigravity", "agy"]
+}
