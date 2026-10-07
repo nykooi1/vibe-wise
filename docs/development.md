@@ -192,6 +192,12 @@ Verified against current first-party documentation on 2026-09-28:
   profile/map, search all of progress for pending decisions, and read the complete
   pending sections plus relevant topics before continuing. Hook output does not
   grow with learning history; Claude's subsequent file reads still consume context.
+- [Copilot CLI hooks](https://docs.github.com/en/copilot/reference/hooks-configuration):
+  Copilot CLI loads `.claude-plugin/plugin.json` and the Claude-format
+  `hooks/hooks.json` unchanged, and sets `CLAUDE_PLUGIN_ROOT` plus
+  `COPILOT_PLUGIN_ROOT`. It reads only a top-level `additionalContext` and
+  silently drops `hookSpecificOutput`, so the hook emits the flat form when
+  `COPILOT_PLUGIN_ROOT` is set. Verified in Copilot CLI 1.0.91 debug logs.
 - [Marketplace creation](https://code.claude.com/docs/en/plugin-marketplaces):
   the small catalog points to this repository's plugin root. The GitHub install
   instructions work after these files are published to the remote repository.

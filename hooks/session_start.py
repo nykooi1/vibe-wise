@@ -7,6 +7,7 @@ The events that trigger it (including compaction) are configured in hooks.json.
 """
 
 import json
+import os
 from pathlib import Path
 import re
 import sys
@@ -92,6 +93,10 @@ def restore(payload):
         "questions; do not repeat completed onboarding. If the profile is now "
         "paused, keep it paused: this hook is not an explicit Learn invocation."
     )
+    # Copilot CLI runs this same hook but only reads a top-level additionalContext;
+    # it silently drops the nested form. It sets COPILOT_PLUGIN_ROOT; Claude doesn't.
+    if os.environ.get("COPILOT_PLUGIN_ROOT"):
+        return {"additionalContext": context}
     # Claude Code adds additionalContext to the model's context. These are reading
     # instructions for Claude; the hook itself hasn't loaded the map or progress.
     return {"hookSpecificOutput": {

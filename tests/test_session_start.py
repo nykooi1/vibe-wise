@@ -43,20 +43,24 @@ class SessionStartTests(unittest.TestCase):
         )
         return directory
 
-    def run_hook(self, cwd=None, source="startup", raw=None):
+    def run_hook(self, cwd=None, source="startup", raw=None, copilot=False):
         payload = raw if raw is not None else json.dumps({
             "hook_event_name": "SessionStart", "source": source,
             "cwd": str(cwd or self.project),
         })
+        # The hook needs a Python executable and its plugin location, not the
+        # developer's credentials or unrelated environment configuration.
+        env = {
+            "PATH": os.pathsep.join((str(Path(sys.executable).parent), os.defpath)),
+            "CLAUDE_PLUGIN_ROOT": str(ROOT),
+        }
+        if copilot:
+            # Copilot CLI sets both roots when it runs a plugin's Claude-format hook.
+            env["COPILOT_PLUGIN_ROOT"] = str(ROOT)
         result = subprocess.run(
             REGISTRATION["hooks"][0]["command"], shell=True,
             input=payload, text=True, capture_output=True, timeout=5,
-            # The hook needs a Python executable and its plugin location, not the
-            # developer's credentials or unrelated environment configuration.
-            env={
-                "PATH": os.pathsep.join((str(Path(sys.executable).parent), os.defpath)),
-                "CLAUDE_PLUGIN_ROOT": str(ROOT),
-            }, cwd=self.root,
+            env=env, cwd=self.root,
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(result.stderr, "")
@@ -83,6 +87,18 @@ class SessionStartTests(unittest.TestCase):
                 self.assertIn("Search the entire progress.md", context)
                 self.assertNotIn("Checkpoint frequency: Light", context)
                 self.assertNotIn("two writes must succeed together", context)
+
+    def test_copilot_cli_receives_top_level_context(self):
+        self.state()
+        result = self.run_hook(copilot=True)
+        self.assertEqual(list(result), ["additionalContext"])
+        self.assertIn(str(ROOT / "skills/learn/SKILL.md"), result["additionalContext"])
+        self.assertIn(str(self.project / ".vibe-wise"), result["additionalContext"])
+
+    def test_copilot_cli_inactive_project_stays_silent(self):
+        self.assertIsNone(self.run_hook(copilot=True))
+        self.state(mode="paused")
+        self.assertIsNone(self.run_hook(copilot=True))
 
     def test_existing_repo_restores_from_nested_working_directory(self):
         self.state()
