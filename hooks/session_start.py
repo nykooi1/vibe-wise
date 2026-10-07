@@ -1,9 +1,14 @@
-"""Restore learning context when Claude Code starts or resumes a session.
+"""Restore learning context when an AI agent session starts or resumes.
 
-Claude Code sends a JSON event on stdin. For a project with active learning notes,
-we print JSON instructions telling Claude which files to read. Otherwise we stay
-silent. This hook does not teach, write notes, or parse conversation transcripts.
-The events that trigger it (including compaction) are configured in hooks.json.
+Supported platforms:
+  Claude Code – sends hook_event_name='SessionStart' with cwd.
+  Codex CLI   – sends hook_event_name='SessionStart' with cwd and source.
+  Antigravity – sends PreInvocation event with workspacePaths and invocationNum.
+
+For a project with active learning notes, we output instructions telling the agent
+which files to read. Otherwise we exit silently.
+This hook does not teach, write notes, or parse conversation transcripts.
+The events that trigger it are configured in hooks.json.
 """
 
 import json
@@ -55,10 +60,29 @@ def state_directory(cwd):
 
 
 def restore(payload):
-    """Build Claude's restoration instructions, or return None to do nothing."""
-    if not isinstance(payload, dict) or payload.get("hook_event_name") != "SessionStart":
+    """Build the agent's restoration instructions, or return None to do nothing."""
+    if not isinstance(payload, dict):
         return None
-    raw_cwd = payload.get("cwd")
+
+    is_antigravity = "workspacePaths" in payload or "invocationNum" in payload
+    is_session_start = payload.get("hook_event_name") == "SessionStart"
+
+    if not is_antigravity and not is_session_start:
+        return None
+
+    # Antigravity fires PreInvocation before every turn.
+    # Antigravity numbers model invocations from zero. Inject only on the first.
+    if is_antigravity and payload.get("invocationNum") != 0:
+        return None
+
+    raw_cwd = None
+    if is_antigravity and "workspacePaths" in payload and payload["workspacePaths"]:
+        raw_cwd = payload["workspacePaths"][0]
+    elif "cwd" in payload:
+        raw_cwd = payload["cwd"]
+    elif "workspacePaths" in payload and payload["workspacePaths"]:
+        raw_cwd = payload["workspacePaths"][0]
+
     # Use the event's explicit project path. A relative path would depend on where
     # the hook process happened to start and could select the wrong learning notes.
     if not isinstance(raw_cwd, str) or not Path(raw_cwd).is_absolute():
@@ -74,12 +98,13 @@ def restore(payload):
     if not profile_is_active(state / "profile.md"):
         return None
 
+    learn_guide = PLUGIN_ROOT / "skills" / "learn" / "SKILL.md"
     # Bootstrap from source files instead of emitting partial notes or an incomplete
     # topic index. Output size is independent of the amount of learning history.
     context = (
-        "VibeWise is active for this project. Before responding or coding, use Read "
-        "to load the Learn guide and its referenced behavior instructions:\n"
-        f"{PLUGIN_ROOT / 'skills/learn/SKILL.md'}\n\n"
+        "VibeWise is active for this project. Before responding or coding, read "
+        "the Learn guide and its referenced behavior instructions:\n"
+        f"{learn_guide}\n\n"
         f"State directory: {state}\n"
         "Read profile.md and project-map.md there. Search the entire progress.md "
         "for pending decisions, then read their complete sections and other topics "
@@ -92,18 +117,31 @@ def restore(payload):
         "questions; do not repeat completed onboarding. If the profile is now "
         "paused, keep it paused: this hook is not an explicit Learn invocation."
     )
-    # Claude Code adds additionalContext to the model's context. These are reading
-    # instructions for Claude; the hook itself hasn't loaded the map or progress.
-    return {"hookSpecificOutput": {
-        "hookEventName": "SessionStart", "additionalContext": context
-    }}
+
+    if is_antigravity:
+        return {
+            "injectSteps": [
+                {
+                    "ephemeralMessage": context
+                }
+            ]
+        }
+    return {
+        "hookSpecificOutput": {
+            "hookEventName": "SessionStart",
+            "additionalContext": context
+        }
+    }
 
 
 def main():
     try:
         # This 64 KiB limit bounds the incoming event, NOT the learner's notes.
         # Oversized/truncated JSON fails parsing and takes the quiet error path.
-        payload = json.loads(sys.stdin.read(65536))
+        raw_input = sys.stdin.read(65536)
+        if not raw_input.strip():
+            return
+        payload = json.loads(raw_input)
         output = restore(payload)
     except (OSError, ValueError, TypeError, RecursionError):
         return  # Learning should never prevent a coding session from starting.

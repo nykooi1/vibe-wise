@@ -1,0 +1,19 @@
+{
+  "name": "vibe-wise",
+  "version": "0.1.43",
+  "description": "You build. AI writes. Learn how to build software while the AI agent writes the code.",
+  "author": { "name": "Noah Kim" },
+  "repository": "https://github.com/nykooi1/vibe-wise",
+  "license": "MIT",
+  "keywords": [
+    "learning",
+    "architecture",
+    "engineering",
+    "claude",
+    "antigravity",
+    "codex",
+    "cursor",
+    "opencode",
+    "agent-plugins"
+  ]
+}

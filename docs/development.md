@@ -1,8 +1,11 @@
 # Development
 
-V1 uses Claude Code skills, Markdown instructions, one read-only Python hook,
-and a small Python helper for confirmed learning resets.
-There are no packages to install. Python 3.8+ is sufficient for the hook and tests.
+V1 uses skills, Markdown instructions, a read-only Python hook
+(compatible with Claude Code, Google Antigravity, and Codex CLI), and a small Python helper for confirmed learning resets.
+Root `plugin.json` and `hooks.json` package Antigravity's `PreInvocation` hook.
+Codex discovers `SessionStart` through `hooks/hooks.json`. `AGENTS.md` and Cursor
+rules provide instructions for agents working in the repository.
+There are no Python packages to install. Python 3.8+ is sufficient for the hook and tests.
 
 ## Local checks
 
@@ -10,6 +13,7 @@ There are no packages to install. Python 3.8+ is sufficient for the hook and tes
 claude plugin validate .claude-plugin/plugin.json
 claude plugin validate .claude-plugin/marketplace.json
 claude plugin validate skills
+agy plugin validate .
 python3 -B -m unittest discover -s tests -v
 git diff --check
 ```

@@ -36,16 +36,17 @@ Setup asks one question at a time. Use the arrow keys and Enter for choices; pic
 If Anthropic Directory isn't available in your Claude Code version, use the GitHub
 marketplace. Choose one installation method; you don't need both.
 
-Run these commands **one at a time** in Claude Code. First, add the marketplace:
+Run these commands **one at a time** in Claude Code:
 
 ```text
 /plugin marketplace add nykooi1/vibe-wise
+/plugin install vibe-wise@vibe-wise
 ```
 
-After it finishes, install the plugin:
+Restart Claude Code in your project, then run:
 
 ```text
-/plugin install vibe-wise@vibe-wise
+/vibe-wise:learn
 ```
 
 Enable automatic updates through `/plugin` → **Marketplaces** → **vibe-wise** →

@@ -4,10 +4,9 @@ Guide one step at a time. Reuse answers already given; don't dump a questionnair
 If the profile says `Onboarding reset: pending`, reuse only answers given after
 that reset. Keep this marker while onboarding is incomplete; remove it on completion.
 Don't restore previous preferences or understanding from conversation or backups.
-For onboarding choices, call AskUserQuestion with exactly one question, 2–4 short options,
-brief descriptions, a header of at most 12 characters, and `multiSelect: false`.
-Use its native keyboard picker, not a printed imitation. If unavailable, ask one
-plain-text question. Open-ended answers belong in chat.
+For onboarding choices:
+- If a native modal/question picker tool is available (such as `ask_question` in Antigravity or `AskUserQuestion` in Claude Code), call it with exactly one question, 2–4 short options, brief descriptions, and single-selection mode (`is_multi_select: false` or `multiSelect: false`).
+- If no interactive question tool is available in your environment (such as in Codex CLI, Cursor, or OpenCode), present the question and numbered options clearly in plain chat text and wait for the user's reply before proceeding. Open-ended answers belong in chat.
 
 Briefly explain: learning comes first. Ask for their approach, then give feedback,
 explain unfamiliar concepts, and ask follow-ups where needed. Their reasoning shapes

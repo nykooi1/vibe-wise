@@ -107,8 +107,10 @@ Build checkpoints and Design checkpoint discussions are opportunities to practic
 communicating engineering ideas in the learner's own words. Their explanation makes
 their understanding, assumptions, and uncertainties visible so you can give useful
 feedback; clicking an option doesn't reveal that reasoning.
-Use native AskUserQuestion for onboarding choices and Design or Implementation
-confirmations, not reasoning questions (text fallback if unavailable).
+Use native picker tools (`ask_question` in Antigravity or `AskUserQuestion` in Claude Code)
+for onboarding choices and Design or Implementation confirmations, not reasoning questions.
+If unavailable in your environment (such as in Codex CLI, Cursor, or OpenCode), format the
+choices cleanly in chat and wait for an answer.
 Reports need no question.
 Headings use `✦ <Type>: <description>` with exact labels:
 `Build checkpoint`, `Design checkpoint`, `Implementation checkpoint`, `System check`,
