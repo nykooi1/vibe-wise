@@ -78,7 +78,7 @@ class InstallTests(unittest.TestCase):
             self.assertFalse(dst.exists() or dst.is_symlink(), f"leftover {dst}")
 
     def test_remove_keeps_foreign_links(self):
-        foreign = self.dest / "commands/learn.md"
+        foreign = self.dest / "commands/vibe-wise-learn.md"
         foreign.parent.mkdir(parents=True)
         foreign.symlink_to(self.root / "some-other-repo-file.md")
         result = self.run_script("--remove")
