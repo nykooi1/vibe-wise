@@ -10,11 +10,31 @@ For anyone who wants to learn as they build—whether you're an aspiring enginee
 
 ## Get started
 
-You need an AI coding agent ([Claude Code](https://code.claude.com/docs/en/setup), [Google Antigravity](https://github.com/google/antigravity), [Codex CLI](https://github.com/openai/codex-cli), [Cursor](https://cursor.com), or [OpenCode](https://opencode.ai)) and
+You need an up-to-date [Claude Code](https://code.claude.com/docs/en/setup) and
 [Python 3](https://www.python.org/downloads/). VibeWise uses Python to restore
 learning context and reset learning notes. No extra Python packages are needed.
 
-### Claude Code
+Install from the built-in **Anthropic Directory**. In Claude Code, run:
+
+```text
+/plugin install vibe-wise@anthropic-plugin-directory
+```
+
+Choose an installation scope and confirm. No marketplace setup is needed.
+
+Restart Claude Code in the project you want to work on, then run:
+
+```text
+/vibe-wise:learn
+```
+
+Setup asks one question at a time. Use the arrow keys and Enter for choices; pick **Use defaults** to skip preference setup. Then ask Claude to build something. Starting fresh or joining an unfamiliar repository both work. For an existing repository, Claude first inspects the code and sketches a small system map.
+
+<details>
+<summary>Alternative: install through GitHub</summary>
+
+If Anthropic Directory isn't available in your Claude Code version, use the GitHub
+marketplace. Choose one installation method; you don't need both.
 
 Run these commands **one at a time** in Claude Code:
 
@@ -29,39 +49,11 @@ Restart Claude Code in your project, then run:
 /vibe-wise:learn
 ```
 
-### Google Antigravity (AGY)
+Enable automatic updates through `/plugin` → **Marketplaces** → **vibe-wise** →
+**Enable auto-update**. This is off by default for third-party marketplaces.
+Restart Claude Code, then run `/vibe-wise:learn` in your project.
 
-Install the plugin from a local checkout, then start Antigravity in your project:
-
-```bash
-agy plugin install /absolute/path/to/vibe-wise
-```
-
-Run `/learn` or `/vibe-wise` to begin. The plugin's `PreInvocation` hook restores
-learning context on the first model invocation in an active project.
-
-### Codex CLI
-
-Register the marketplace and install VibeWise:
-
-```bash
-codex plugin marketplace add nykooi1/vibe-wise
-codex plugin add vibe-wise@vibe-wise
-```
-
-Or copy `AGENTS.md` into your workspace. Codex CLI automatically detects active learning state on startup.
-
-### Cursor
-
-Copy `.cursor/rules/vibe-wise.mdc` or the root `AGENTS.md` into your project. Use `@vibe-wise` in Cursor Composer or ask Cursor to start learning.
-
-### OpenCode
-
-OpenCode automatically indexes the root `AGENTS.md` on startup and activates VibeWise when `.vibe-wise/` is initialized.
-
----
-
-Setup asks one question at a time. Use your tool's picker (or reply in text) for choices; pick **Use defaults** to skip preference setup. Then ask your AI to build something. Starting fresh or joining an unfamiliar repository both work. For an existing repository, AI first inspects the code and sketches a small system map.
+</details>
 
 ## What it feels like
 
@@ -232,11 +224,17 @@ your experience level or preferences, just tell Claude; no reset is needed.
 
 ## Updating
 
-For automatic updates, open `/plugin` → **Marketplaces** → **vibe-wise** →
-**Enable auto-update**. Auto-update is off by default for third-party marketplaces.
-Claude Code notifies you after an update; restart Claude Code to load the new version.
+Open `/plugin` → **Installed**, select VibeWise, and choose **Update now**.
+For automatic updates, open **Marketplaces**, select the source you installed from,
+and enable auto-update if it's off.
 
-To update manually, run these in your terminal:
+To update a directory installation from your terminal:
+
+```sh
+claude plugin update vibe-wise@anthropic-plugin-directory
+```
+
+If you installed through the GitHub marketplace instead:
 
 ```sh
 claude plugin marketplace update vibe-wise
