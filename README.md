@@ -266,16 +266,16 @@ on your `PATH`, and [Bun](https://bun.com) (OpenCode uses it to run the plugin).
    python3 ~/tools/vibe-wise/scripts/install-opencode.py
    ```
 
-   Skills load through OpenCode's `skill` tool, `/learn` and `/reset` become
-   slash commands, and `vibe-wise.ts` restores learning context when a
-   session compacts. Re-running the installer is safe; it changes nothing
-   when everything is already in place. Use `--dest <dir>` for a custom
+   Skills load through OpenCode's `skill` tool, `/vibe-wise-learn` and
+   `/vibe-wise-reset` become slash commands, and `vibe-wise.ts` restores learning
+   context when a session compacts. Re-running the installer is safe; it changes
+   nothing when everything is already in place. Use `--dest <dir>` for a custom
    config location, `--copy` on Windows or where symlinks are unavailable,
    `--force` to replace conflicting files, and `--remove` to uninstall.
 
-3. Start `opencode` in any project and run `/learn`. First-time setup asks one
-   question at a time, exactly like Claude Code. `/reset` backs up the notes
-   and restarts onboarding after confirmation.
+3. Start `opencode` in any project and run `/vibe-wise-learn`. First-time setup
+   asks one question at a time, exactly like Claude Code. `/vibe-wise-reset`
+   backs up the notes and restarts onboarding after confirmation.
 
 <details>
 <summary>Alternative: manual install</summary>
@@ -284,8 +284,8 @@ on your `PATH`, and [Bun](https://bun.com) (OpenCode uses it to run the plugin).
 mkdir -p ~/.config/opencode/skills ~/.config/opencode/commands ~/.config/opencode/plugins
 ln -s ~/tools/vibe-wise/skills/learn ~/.config/opencode/skills/learn
 ln -s ~/tools/vibe-wise/skills/reset ~/.config/opencode/skills/reset
-ln -s ~/tools/vibe-wise/.opencode/commands/learn.md ~/.config/opencode/commands/learn.md
-ln -s ~/tools/vibe-wise/.opencode/commands/reset.md ~/.config/opencode/commands/reset.md
+ln -s ~/tools/vibe-wise/.opencode/commands/vibe-wise-learn.md ~/.config/opencode/commands/vibe-wise-learn.md
+ln -s ~/tools/vibe-wise/.opencode/commands/vibe-wise-reset.md ~/.config/opencode/commands/vibe-wise-reset.md
 ln -s ~/tools/vibe-wise/.opencode/plugins/vibe-wise.ts ~/.config/opencode/plugins/vibe-wise.ts
 ```
 
@@ -300,11 +300,13 @@ switch hosts mid-project and the same notes load. Differences from Claude Code:
 - The SessionStart hook has no OpenCode equivalent, so startup restore relies
   on rules in `AGENTS.md` (OpenCode reads it every session) and the `learn`
   skill itself; compaction restore is wrapped by the plugin.
-- Skills' slash commands are OpenCode commands (`/learn`, `/reset`) instead of
-  Claude Code namespaced commands (`/vibe-wise:learn`).
+- Skills' slash commands are OpenCode commands (`/vibe-wise-learn`,
+  `/vibe-wise-reset`) instead of Claude Code namespaced commands
+  (`/vibe-wise:learn`). OpenCode takes command names from file names and has
+  no namespace separator, so they get a `vibe-wise-` prefix instead.
 - The plugin runs `hooks/session_start.py` and injects its context only into
   compaction. If OpenCode's plugin API changes, the wrapper fails silently and
-  learning still works — run `/learn` to restore manually.
+  learning still works — run `/vibe-wise-learn` to restore manually.
 
 To update, `git pull` in your clone; symlinks follow.
 

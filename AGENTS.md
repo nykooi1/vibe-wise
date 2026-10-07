@@ -8,6 +8,9 @@ Learning-first Claude Code plugin. Claude Code layout in `skills/` and
 - `.opencode/skills/learn` and `.opencode/skills/reset` are symlinks to
   `../skills/<name>`. Edit skill content only under `skills/`.
 - `.opencode/commands/*.md` are thin wrappers that load the matching skill.
+  OpenCode takes command names from file names with no namespace separator,
+  so they are `vibe-wise-learn.md` and `vibe-wise-reset.md` (`/vibe-wise-learn`,
+  `/vibe-wise-reset`); the skills themselves stay named `learn`/`reset`.
 - Skill scripts are plain Python 3 stdlib; run them with `python3`.
 - Python helper entry points: `skills/reset/reset.py`,
   `hooks/session_start.py` (used by the Claude Code SessionStart hook).

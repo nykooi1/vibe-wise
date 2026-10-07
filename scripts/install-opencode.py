@@ -18,8 +18,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 PIECES = [
     ("skills/learn", "skills/learn"),
     ("skills/reset", "skills/reset"),
-    (".opencode/commands/learn.md", "commands/learn.md"),
-    (".opencode/commands/reset.md", "commands/reset.md"),
+    (".opencode/commands/vibe-wise-learn.md", "commands/vibe-wise-learn.md"),
+    (".opencode/commands/vibe-wise-reset.md", "commands/vibe-wise-reset.md"),
     (".opencode/plugins/vibe-wise.ts", "plugins/vibe-wise.ts"),
 ]
 
@@ -134,7 +134,7 @@ def main():
     if exit_code:
         print("completed with problems", file=sys.stderr)
     else:
-        print(f"done. start `opencode` in any project and run /learn")
+        print(f"done. start `opencode` in any project and run /vibe-wise-learn")
     sys.exit(exit_code)
 
 
