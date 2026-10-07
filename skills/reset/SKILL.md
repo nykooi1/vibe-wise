@@ -15,8 +15,13 @@ code, dependencies, Git history, other projects, and plugin installation stay in
    do not pass the placeholder literally.
 
    ```sh
-   python3 "${CLAUDE_PLUGIN_ROOT}/skills/reset/reset.py" --cwd "<absolute project directory>"
+   python3 "<path to this skill's reset.py>" --cwd "<absolute project directory>"
    ```
+
+   Locate `reset.py` in the same directory as this SKILL.md. In Claude Code
+   use `${CLAUDE_PLUGIN_ROOT}/skills/reset/reset.py`; in other hosts, resolve
+   the skill's directory (for example `.opencode/skills/reset/reset.py`)
+   and use that absolute path. Confirm the file exists before running it.
 
    The helper uses Learn's project-boundary and legacy-state lookup. If it reports
    no notes, explain there's nothing to reset and suggest `/vibe-wise:learn`.
@@ -35,14 +40,15 @@ code, dependencies, Git history, other projects, and plugin installation stay in
    and the preview's exact `confirmation` value, safely quoted:
 
    ```sh
-   python3 "${CLAUDE_PLUGIN_ROOT}/skills/reset/reset.py" --cwd "<original cwd>" --confirm "<confirmation>"
+   python3 "<same absolute path as above>" --cwd "<original cwd>" --confirm "<confirmation>"
    ```
 
    If the target or notes changed, preview again and get new confirmation. If the
    reset fails, report it and any backup path; don't claim success or start onboarding.
    Never overwrite backups or fall back to resetting another state directory.
 
-4. On success, show the backup path. Read `${CLAUDE_PLUGIN_ROOT}/skills/learn/SKILL.md` and resume Learn with
+4. On success, show the backup path. Read the `learn` skill's SKILL.md from the
+   same skills directory as this skill and resume Learn with
    the new incomplete profile. Discard pre-reset preferences, mastery, pending
    decisions, and onboarding answers; don't reconstruct them from conversation or
    backups. Inspect actual code to rebuild the map. Begin fresh onboarding with
