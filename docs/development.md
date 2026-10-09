@@ -26,6 +26,39 @@ Reset tests cover read-only preview, confirmed backup/reset, stale confirmation,
 legacy and partial notes, nested projects, repeated backups, rejected symlinks,
 backup/write failures, and restoring incomplete onboarding after reset.
 
+## Hermes checks
+
+The `.hermes-plugin/plugin.yaml` and `.hermes-plugin/__init__.py` files register
+the shared Learn and Reset skills and a `pre_llm_call` restoration hook.
+No additional Python dependencies are needed.
+The hook has no authoritative workspace path, so it asks the agent to inspect its
+own workspace instead of reading notes from the host process's working directory.
+It does not read or write learner notes itself, and skips delegated child sessions.
+
+```sh
+hermes plugins doctor . --ci
+python3 -B -m unittest discover -s tests -v
+```
+
+Run Plugin Doctor on the repository root, not `.hermes-plugin/` alone: its isolated
+copy must include the shared skill files. Hermes discovers the manifest one level
+below the installed repository. The adapter resolves guides relative to its own
+location, independently of the session's working directory.
+
+For local testing, copy the entire checkout to `$HERMES_HOME/plugins/vibe-wise` (default
+`~/.hermes/plugins/vibe-wise`), enable `vibe-wise`, and restart Hermes. Run the
+conversation checks below using `skill_view(name="vibe-wise:learn")` and
+`skill_view(name="vibe-wise:reset")`; use Hermes's `clarify` picker or chat fallback.
+Verify that explicit Learn creates all three notes before its first question, while
+installation alone creates none. Also check restart, pause/resume, pending decisions,
+compression, and reset cancellation/confirmation in a disposable project.
+
+Initially loader-tested against Hermes checkout `0be2d562b0`; older versions without
+`register_skill` are unsupported. Automated tests check registration and hook behavior,
+not model compliance. The hook runs between turns, so it does not guarantee recovery
+during mid-turn compression. In environments with `/tmp/.git`, run the test suite
+with a non-repository `TMPDIR` so no-Git fixtures remain outside a Git boundary.
+
 ## Conversation smoke tests
 
 Use an authenticated Claude Code session and temporary copies of projects.

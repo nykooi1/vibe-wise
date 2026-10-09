@@ -107,8 +107,12 @@ Build checkpoints and Design checkpoint discussions are opportunities to practic
 communicating engineering ideas in the learner's own words. Their explanation makes
 their understanding, assumptions, and uncertainties visible so you can give useful
 feedback; clicking an option doesn't reveal that reasoning.
-Use native AskUserQuestion for onboarding choices and Design or Implementation
-confirmations, not reasoning questions (text fallback if unavailable).
+Use the host's native question tool for onboarding choices and Design or
+Implementation confirmations, not reasoning questions: AskUserQuestion in Claude
+Code; `clarify` in Hermes. For Hermes, follow the available tool schema; current
+versions accept `questions=[{"question": "...", "choices": ["...", "..."],
+"multi_select": false}]`. Ask one question per call. If the tool is unavailable
+or cannot collect an answer, ask in chat and wait; a timeout is not approval.
 Write a confirmation's summary in chat before calling the picker; the picker
 shows only the question and options.
 Reports need no question.

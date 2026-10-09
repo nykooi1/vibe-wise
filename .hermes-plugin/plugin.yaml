@@ -1,0 +1,8 @@
+name: vibe-wise
+version: 0.1.44
+description: Learn software design while Hermes implements the changes you agree on.
+author: Y-Galal (Hermes port), Noah Kim (original VibeWise)
+license: MIT
+homepage: https://github.com/nykooi1/vibe-wise
+provides_hooks:
+  - pre_llm_call

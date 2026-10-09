@@ -1,6 +1,6 @@
 ---
 name: learn
-description: Activate or resume learning-first development. You lead the design; Claude gives feedback, explains concepts, asks follow-ups, and writes the agreed code.
+description: Activate or resume learning-first development. You lead the design; the agent gives feedback, explains concepts, asks follow-ups, and writes the agreed code.
 disable-model-invocation: true
 ---
 
@@ -18,9 +18,13 @@ Do not switch to a subagent or require manual coding by default.
 
 If you are running in Codex rather than Claude Code, first read [codex.md](codex.md).
 
-Use the Read tool for plugin guides instead of printing them with Bash `cat`.
-Use Glob to discover optional learner-state files before reading them. A missing
-`.vibe-wise/` directory is normal first-time setup, not an error. If a shell
+On Claude Code, use Read for guides and Glob for optional state discovery.
+On Hermes, load this skill with `skill_view(name="vibe-wise:learn")`; read bundled
+guides with `skill_view(name="vibe-wise:learn", file_path="behavior.md")` (and the
+corresponding filenames for onboarding and templates). Use `read_file` and
+`terminal` for project notes and discovery. Resolve the actual session workspace
+through those tools; never assume the plugin directory is the project.
+A missing `.vibe-wise/` directory is normal first-time setup, not an error. If a shell
 check is necessary, handle absence with an explicit conditional that succeeds;
 don't run `ls` on a possibly missing directory or hide actual read failures.
 Keep guide reads separate from optional state checks so a missing file doesn't
@@ -47,7 +51,18 @@ Set `Learning mode: active` if the user is resuming paused learning. If onboardi
 is incomplete, ask only the unanswered questions. Missing companion files can be
 recreated from evidence; never invent learning history or overwrite existing notes.
 
-If no profile exists, read [onboarding.md](onboarding.md) and run onboarding.
+If no profile exists and the user explicitly invoked Learn, read
+[state-templates.md](state-templates.md) and create the three initial note files
+BEFORE asking the first onboarding question or Build checkpoint. Set
+`Learning mode: active` and `Onboarding: incomplete`, record known requirements
+and preferences, and leave unknown answers as `Not specified`. Do not invent
+learning history. Save only missing files; preserve any existing companion notes.
+Verify the files exist and report their absolute directory. If saving fails,
+explain the error rather than claiming persistent learning is active.
+Then read [onboarding.md](onboarding.md) and run onboarding, updating the saved
+profile between turns. Choosing defaults does not skip creating learning notes.
+An automatic restoration check without explicit activation must not create a
+fresh profile or start onboarding.
 Use [state-templates.md](state-templates.md) when creating state. These files are
 local Markdown maintained with normal file tools; there is no service to call.
 

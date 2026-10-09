@@ -4,8 +4,11 @@ Guide one step at a time. Reuse answers already given; don't dump a questionnair
 If the profile says `Onboarding reset: pending`, reuse only answers given after
 that reset. Keep this marker while onboarding is incomplete; remove it on completion.
 Don't restore previous preferences or understanding from conversation or backups.
-For onboarding choices, call AskUserQuestion with exactly one question, 2–4 short options,
-brief descriptions, a header of at most 12 characters, and `multiSelect: false`.
+For onboarding choices, use exactly one question and 2–4 short options.
+In Claude Code, call AskUserQuestion with brief descriptions, a header of at most
+12 characters, and `multiSelect: false`. In Hermes, use `clarify` with a one-entry
+`questions` array, `question`, string `choices`, and `multi_select: false`, following
+the available schema. Put explanatory descriptions in the question if needed.
 Use its native keyboard picker, not a printed imitation. If unavailable, ask one
 plain-text question. Open-ended answers belong in chat.
 

@@ -10,6 +10,19 @@ Run this in the main conversation, only when explicitly invoked. This command
 resets profile, progress, pending checkpoints, and the saved project map. Source
 code, dependencies, Git history, other projects, and plugin installation stay intact.
 
+Host paths: in Claude Code, `${CLAUDE_PLUGIN_ROOT}` is supplied by the host.
+In Hermes, load `skill_view(name="vibe-wise:reset")`. Its skill directory is
+`${HERMES_SKILL_DIR}` (expanded by Hermes's default skill preprocessing). The
+helper is `reset.py` in that directory. If the placeholder remains unexpanded,
+stop and explain that Hermes skill template substitution must be enabled; do not
+guess an installation path.
+Replace the entire `${CLAUDE_PLUGIN_ROOT}/skills/reset/reset.py` expression below
+with that absolute helper path, safely shell-quoted. Do not assume Hermes defines
+CLAUDE_PLUGIN_ROOT. Run it through `terminal` only when that tool can access the
+installed helper and the actual project in the same filesystem. If they are on
+different hosts/containers, explain that reset requires a co-located installation;
+do not substitute deletion commands or reset a host-side project.
+
 If you are running in Codex rather than Claude Code, first read [codex.md](codex.md).
 
 1. Run the read-only preview for the user's current project directory. Replace
@@ -26,7 +39,9 @@ If you are running in Codex rather than Claude Code, first read [codex.md](codex
 
 2. Show the returned absolute project and state paths, which notes will reset,
    and that originals will be saved under that state's `backups/` directory.
-   Use AskUserQuestion: header `Reset`, one question, `multiSelect: false`, options
+   In Claude Code, use AskUserQuestion: header `Reset`, one question,
+   `multiSelect: false`. In Hermes, use `clarify` with one entry in `questions`,
+   a `question`, string `choices`, and `multi_select: false`. The options are
    **Cancel** (keep learning notes) and **Reset learning** (back up notes and restart
    onboarding). Ask whether to reset learning for the named project. If the picker
    is unavailable, ask the same question in text. Wait for an explicit answer.
@@ -44,7 +59,9 @@ If you are running in Codex rather than Claude Code, first read [codex.md](codex
    reset fails, report it and any backup path; don't claim success or start onboarding.
    Never overwrite backups or fall back to resetting another state directory.
 
-4. On success, show the backup path. Read `${CLAUDE_PLUGIN_ROOT}/skills/learn/SKILL.md` and resume Learn with
+4. On success, show the backup path. In Claude Code, read
+   `${CLAUDE_PLUGIN_ROOT}/skills/learn/SKILL.md`; in Hermes, load
+   `skill_view(name="vibe-wise:learn")`. Resume Learn with
    the new incomplete profile. Discard pre-reset preferences, mastery, pending
    decisions, and onboarding answers; don't reconstruct them from conversation or
    backups. Inspect actual code to rebuild the map. Begin fresh onboarding with

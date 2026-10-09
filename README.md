@@ -4,7 +4,7 @@
 
 **You build. AI writes.**
 
-A plugin for **Claude Code** and **Codex** that puts learning first and keeps you in control while AI writes the code you designed. The AI **asks for your approach first**, helps you examine tradeoffs, and explains unfamiliar concepts. You shape the design and decide when it's ready to implement. The AI writes the code, then explains what it changed and why.
+A plugin for **Claude Code**, **Codex**, and **Hermes Agent** that puts learning first and keeps you in control while AI writes the code you designed. The AI **asks for your approach first**, helps you examine tradeoffs, and explains unfamiliar concepts. You shape the design and decide when it's ready to implement. The AI writes the code, then explains what it changed and why.
 
 For anyone who wants to learn as they build—whether you're an aspiring engineer, a junior developer, or an experienced engineer exploring an unfamiliar stack. Practice planning how the pieces fit together, anticipating failures, and checking the result while keeping ownership of the decisions.
 
@@ -13,6 +13,7 @@ For anyone who wants to learn as they build—whether you're an aspiring enginee
 - [Get started](#get-started)
   - [Claude Code](#claude-code)
   - [Codex](#codex)
+  - [Hermes Agent](#hermes-agent)
 - [What it feels like](#what-it-feels-like)
 - [Make it yours](#make-it-yours)
 - [Updating](#updating)
@@ -20,10 +21,12 @@ For anyone who wants to learn as they build—whether you're an aspiring enginee
 
 ## Get started
 
-You need an up-to-date [Claude Code](https://code.claude.com/docs/en/setup) or
-[Codex](https://developers.openai.com/codex), and
+You need an up-to-date [Claude Code](https://code.claude.com/docs/en/setup),
+[Codex](https://developers.openai.com/codex), or
+[Hermes Agent](https://hermes-agent.nousresearch.com/), and
 [Python 3](https://www.python.org/downloads/). In Claude Code, VibeWise uses Python
 to restore learning context and reset learning notes. In Codex, only reset needs it.
+Hermes runs the Python plugin adapter and uses Python for reset.
 No extra Python packages are needed.
 
 ### Claude Code
@@ -89,6 +92,46 @@ mode. It resumes from your saved notes without repeating setup. To reset, run
 
 In Codex, the commands in this guide use `$` instead of `/`: `/vibe-wise:learn`
 becomes `$vibe-wise:learn`.
+
+### Hermes Agent
+
+Use a recent Hermes Agent with native plugin skills and the `pre_llm_call` hook.
+Install from the repository containing this integration:
+
+```sh
+hermes plugins install nykooi1/vibe-wise --no-enable
+hermes plugins enable vibe-wise
+```
+
+Install the whole repository, not just `.hermes-plugin/`: the hidden Hermes
+adapter uses the shared `skills/` directory. Current Hermes versions may warn
+that the repository root has no manifest; the nested plugin is discovered when
+you enable `vibe-wise`. Installation and activation use separate names: the
+installed repository and skill namespace are both `vibe-wise`.
+
+Restart Hermes in your project, then ask:
+
+```text
+Load vibe-wise:learn and start learning mode with default preferences.
+```
+
+Hermes loads the namespaced skill through `skill_view`; `/vibe-wise:learn` is not
+registered as a Hermes slash command. Explicit activation saves the initial
+`.vibe-wise/` notes before onboarding. Existing notes, including legacy
+`.sensible-vibes/`, are reused in place. Say “Pause learning” to pause, and load
+Learn again to resume. To reset, explicitly ask to load `vibe-wise:reset`; it
+previews the target and waits for confirmation before backing up the notes.
+
+A small instruction each main-conversation turn asks Hermes to find active notes
+in its current workspace and restore pending decisions. Installation alone does
+not activate learning. This is model-driven restoration, not tool-level checkpoint
+enforcement. Reset requires Python 3, the installed helper and project accessible
+in the same terminal filesystem, and Hermes's default skill template expansion.
+
+Update with `hermes plugins update vibe-wise`, then restart Hermes. Remove
+the installation with `hermes plugins remove vibe-wise`. Project notes
+stay in your project. See [development checks](docs/development.md#hermes-checks)
+for local validation and the conversation test checklist.
 
 ## What it feels like
 
