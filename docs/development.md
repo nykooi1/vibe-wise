@@ -3,6 +3,8 @@
 V1 uses Claude Code skills, Markdown instructions, one read-only Python hook,
 and a small Python helper for confirmed learning resets.
 There are no packages to install. Python 3.8+ is sufficient for the hook and tests.
+The OpenCode port (`opencode/vibe-wise.js`) is dependency-free JavaScript; its
+tests need Node 18+.
 
 ## Local checks
 
@@ -11,6 +13,7 @@ claude plugin validate .claude-plugin/plugin.json
 claude plugin validate .claude-plugin/marketplace.json
 claude plugin validate skills
 python3 -B -m unittest discover -s tests -v
+node --test "tests/*.test.mjs"
 git diff --check
 ```
 
@@ -175,6 +178,40 @@ Do not commit `.vibe-wise/` or test transcripts. The plugin recommends an
 ignore rule during onboarding, but changes `.gitignore` only after telling the
 user and receiving their instruction to make the edit.
 
+## OpenCode port
+
+`package.json` makes the repository an OpenCode 1.x plugin package; its `main`
+is `opencode/vibe-wise.js`. Keep its `version` in sync with
+`.claude-plugin/plugin.json` (a test checks this). The skills, guides, and reset
+helper are shared; only the wiring differs:
+
+| Claude Code | OpenCode |
+| --- | --- |
+| `skills/*/SKILL.md` with `disable-model-invocation` | Commands `vibe-wise:learn` / `vibe-wise:reset`, added by the plugin's `config` hook from the same files. Not registered as OpenCode skills, because the model could load those on its own. |
+| `hooks/session_start.py` on `SessionStart` | `experimental.chat.messages.transform`, a JS port of the same state lookup and activation checks. Messages are rebuilt every step, so it covers startup, resume, and compaction. Subagent (child) sessions are skipped. |
+| Hook output points Claude at plugin files | Guides are included in the context, because OpenCode asks permission for every read outside the project. `onboarding.md` is left out only once the profile says `Onboarding: complete`. |
+| `${CLAUDE_PLUGIN_ROOT}` | Replaced with the plugin's absolute path (forward slashes) in command templates. |
+| AskUserQuestion, Read, Glob | A short note maps them to `question`, `read`, `glob`, and so on. |
+
+Command templates go through OpenCode's template expansion: `$1`/`$ARGUMENTS`,
+`` !`cmd` `` shell blocks, and `@file` references. Guides must avoid that
+syntax (a test checks this).
+
+Changes to the activation rules in `hooks/session_start.py` must be mirrored in
+`opencode/vibe-wise.js`; the two test suites cover the same cases.
+
+Smoke test with a local checkout and an isolated configuration:
+
+```sh
+# opencode.json in a temporary project:
+#   { "plugin": ["/absolute/path/to/vibe-wise"] }
+opencode debug config                  # lists vibe-wise:learn and vibe-wise:reset
+opencode run --command vibe-wise:learn "a small todo CLI"
+```
+
+`opencode run` has no `question` picker, so choices use the text fallback there.
+OpenCode 2.x has a different plugin API and isn't supported yet.
+
 ## Design and official references
 
 Verified against current first-party documentation on 2026-09-28:
@@ -305,3 +342,32 @@ Learn/behavior guides and saved notes, found a pending implementation decision
 over 40,000 characters into progress, and resumed its confirmation without writing
 application code. The source fixture stayed unchanged. Compaction events remain
 covered at the hook level; an actual interactive `/compact` check is still pending.
+
+For the OpenCode port, checks on 2026-10-04 used OpenCode 1.18.34 with an isolated
+configuration and a local-path plugin entry. `opencode debug config` listed both
+commands. With an active profile, a print-mode session reported the restored state
+directory and checkpoint format without reading any files. `/vibe-wise:learn` in a
+fresh project created the three notes and asked "What are we doing?" with the text
+fallback. `/vibe-wise:reset` ran the helper's read-only preview from the plugin path
+without a permission prompt and left the notes unchanged pending confirmation.
+Installing from the pushed git spec listed both commands.
+
+Follow-up checks drove `opencode serve` through its HTTP API, answering `question`
+requests the way the TUI does and rejecting any permission prompt. The first run
+found a bug: the Learn command opened with the guide's "Read behavior.md", so the
+model searched the disk, found a Claude Code plugin cache copy, and stopped on an
+`external_directory` prompt. Templates and restored context now open with a note
+that the guides are included and must not be read from disk. After the fix:
+
+- Onboarding asked Project, building, and experience through the picker, one
+  question per call, saved the profile, then asked the learner's approach without
+  writing code. The free model skipped the preferences picker and asked "what are
+  you building" as a picker instead of in chat; both are model-quality deviations.
+- With a pending Implementation checkpoint, "Where were we?" restored it from the
+  notes and offered Implement this step / Discuss in the picker. After an explicit
+  approval and a real `/summarize` compaction, "Ok, continue." only re-read notes
+  and re-asked the open Build checkpoint; the model still named the state directory
+  and the pending stage. No permission prompts occurred.
+
+All 21 Node tests pass. The TUI's visual rendering of the picker wasn't checked;
+the API path it uses was.

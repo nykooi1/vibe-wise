@@ -90,6 +90,31 @@ mode. It resumes from your saved notes without repeating setup. To reset, run
 In Codex, the commands in this guide use `$` instead of `/`: `/vibe-wise:learn`
 becomes `$vibe-wise:learn`.
 
+### Using OpenCode
+
+VibeWise also runs in [OpenCode](https://opencode.ai) 1.x with the same guides
+and the same `.vibe-wise/` notes. Add it to `opencode.json` in your project, or to
+`~/.config/opencode/opencode.json` for every project:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["opencode-vibe-wise@git+https://github.com/nykooi1/vibe-wise.git"]
+}
+```
+
+Restart OpenCode in your project, then run `/vibe-wise:learn`. `/vibe-wise:reset`
+works the same way. Python 3 is still needed for reset. To use a local clone instead,
+put its absolute path in `plugin`, for example `"C:/code/vibe-wise"`.
+
+OpenCode can cache git plugins, so if an update doesn't show up after a restart,
+clear OpenCode's package cache (`~/.cache/opencode`).
+
+Session restoration uses OpenCode's `experimental.chat.messages.transform` hook,
+which may change between releases. It works with OpenCode 1.x; 2.x isn't supported
+yet. In a project with active learning, the guides (about 16 KB, 20 KB while
+onboarding is unfinished) are added to the model's context on every step.
+
 ## What it feels like
 
 You're building a Notion-style notes app: users sign in, create and edit private

@@ -1,0 +1,23 @@
+{
+  "name": "opencode-vibe-wise",
+  "version": "0.1.43",
+  "description": "You build. AI writes. Learn how to build software while AI writes the code.",
+  "type": "module",
+  "main": "opencode/vibe-wise.js",
+  "files": [
+    "opencode/",
+    "skills/",
+    "hooks/session_start.py",
+    "LICENSE"
+  ],
+  "keywords": ["opencode", "opencode-plugin", "learning", "architecture", "engineering"],
+  "author": "Noah Kim",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nykooi1/vibe-wise.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test \"tests/*.test.mjs\""
+  }
+}
