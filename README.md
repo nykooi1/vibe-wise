@@ -16,6 +16,7 @@ For anyone who wants to learn as they build—whether you're an aspiring enginee
 - [What it feels like](#what-it-feels-like)
 - [Make it yours](#make-it-yours)
 - [Updating](#updating)
+- [Other harnesses](#other-harnesses)
 - [License](#license)
 
 ## Get started
@@ -291,6 +292,12 @@ codex plugin add vibe-wise@vibe-wise
 ```
 
 Then start a new Codex session.
+
+## Other harnesses
+
+Community ports use the same `.vibe-wise/` notes. They live outside this repository.
+
+- **Pi:** [yuritoledo/vibe-wise-pi](https://github.com/yuritoledo/vibe-wise-pi), an unofficial port. Install with `pi install npm:@yuritoledo/vibe-wise-pi`.
 
 ## License
 
