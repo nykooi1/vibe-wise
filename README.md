@@ -4,7 +4,7 @@
 
 **You build. AI writes.**
 
-A plugin for **Claude Code** and **Codex** that puts learning first and keeps you in control while AI writes the code you designed. The AI **asks for your approach first**, helps you examine tradeoffs, and explains unfamiliar concepts. You shape the design and decide when it's ready to implement. The AI writes the code, then explains what it changed and why.
+A plugin for **Claude Code**, **Codex**, and **Kilo Code** that puts learning first and keeps you in control while AI writes the code you designed. The AI **asks for your approach first**, helps you examine tradeoffs, and explains unfamiliar concepts. You shape the design and decide when it's ready to implement. The AI writes the code, then explains what it changed and why.
 
 For anyone who wants to learn as they build—whether you're an aspiring engineer, a junior developer, or an experienced engineer exploring an unfamiliar stack. Practice planning how the pieces fit together, anticipating failures, and checking the result while keeping ownership of the decisions.
 
@@ -13,6 +13,7 @@ For anyone who wants to learn as they build—whether you're an aspiring enginee
 - [Get started](#get-started)
   - [Claude Code](#claude-code)
   - [Codex](#codex)
+  - [Kilo Code](#kilo-code)
 - [What it feels like](#what-it-feels-like)
 - [Make it yours](#make-it-yours)
 - [Updating](#updating)
@@ -20,11 +21,11 @@ For anyone who wants to learn as they build—whether you're an aspiring enginee
 
 ## Get started
 
-You need an up-to-date [Claude Code](https://code.claude.com/docs/en/setup) or
-[Codex](https://developers.openai.com/codex), and
-[Python 3](https://www.python.org/downloads/). In Claude Code, VibeWise uses Python
-to restore learning context and reset learning notes. In Codex, only reset needs it.
-No extra Python packages are needed.
+You need an up-to-date [Claude Code](https://code.claude.com/docs/en/setup),
+[Codex](https://developers.openai.com/codex), or [Kilo Code](https://kilo.ai/docs),
+and [Python 3](https://www.python.org/downloads/). In Claude Code, VibeWise uses
+Python to restore learning context and reset learning notes. In Codex and Kilo, only
+reset needs it. No extra Python packages are needed.
 
 ### Claude Code
 
@@ -85,10 +86,35 @@ codex plugin add vibe-wise@vibe-wise
 Start Codex in your project and run `$vibe-wise:learn`. Run it again at the start
 of each Codex session, and whenever Codex seems to have lost track of learning
 mode. It resumes from your saved notes without repeating setup. To reset, run
-`$vibe-wise:reset`. Claude Code and Codex share the same `.vibe-wise/` notes.
+`$vibe-wise:reset`. Claude Code, Codex, and Kilo share the same `.vibe-wise/` notes.
 
 In Codex, the commands in this guide use `$` instead of `/`: `/vibe-wise:learn`
 becomes `$vibe-wise:learn`.
+
+### Kilo Code
+
+VibeWise is a Kilo plugin. Install it from the **Marketplace** panel in the VS Code
+extension: select **VibeWise**, then choose a **Project** or **Global** scope. Or add
+it to your config's `plugin` array and let Kilo install it at startup:
+
+```json
+{
+  "$schema": "https://app.kilo.ai/config.json",
+  "plugin": ["git:github.com/nykooi1/vibe-wise"]
+}
+```
+
+Start Kilo in the project you want to work on, then run:
+
+```text
+/vibe-wise:learn
+```
+
+Setup asks one question at a time using Kilo's native picker; pick **Use defaults**
+to skip preference setup. Learning mode resumes automatically when a session starts
+and after compaction, so you don't re-run Learn on every session. To reset, run
+`/vibe-wise:reset`. Python 3 is used only for reset. Kilo shares the same
+`.vibe-wise/` notes as Claude Code and Codex.
 
 ## What it feels like
 
@@ -249,7 +275,7 @@ are with the stack. Checkpoint frequency—Light, Normal, or Frequent—is separ
 
 Preferences, learning notes, and a project map live in `.vibe-wise/` in your project. In a Git repository, that's the repository root, and VibeWise finds it from any subfolder. Without Git, it's the folder you start in, so always start from your project's top folder. Learning mode resumes in future sessions and after compaction. Add `.vibe-wise/` to your `.gitignore` to keep your notes out of Git; the plugin won't change it silently.
 
-No extra account, backend, or telemetry. Saved notes are included in the AI's context, so your normal Claude Code or Codex data settings still apply.
+No extra account, backend, or telemetry. Saved notes are included in the AI's context, so your normal Claude Code, Codex, or Kilo data settings still apply.
 
 To start learning this project from scratch, run `/vibe-wise:reset`. It shows the
 project and asks **Cancel / Reset learning**. After confirmation, it backs up your
@@ -291,6 +317,9 @@ codex plugin add vibe-wise@vibe-wise
 ```
 
 Then start a new Codex session.
+
+For Kilo, reinstall or update VibeWise from the **Marketplace** panel, then start a
+new session. Your project learning notes stay intact; no reset is needed.
 
 ## License
 
