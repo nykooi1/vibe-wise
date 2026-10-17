@@ -2,7 +2,10 @@
 
 V1 uses Claude Code skills, Markdown instructions, one read-only Python hook,
 and a small Python helper for confirmed learning resets.
-There are no packages to install. Python 3.8+ is sufficient for the hook and tests.
+The Kilo plugin is a self-contained TypeScript module in `kilo/` that reuses the
+same guides and the Python reset helper.
+There are no packages to install. Python 3.8+ is sufficient for the hook and tests;
+Bun runs the Kilo plugin and its tests.
 
 ## Local checks
 
@@ -10,6 +13,7 @@ There are no packages to install. Python 3.8+ is sufficient for the hook and tes
 claude plugin validate .claude-plugin/plugin.json
 claude plugin validate .claude-plugin/marketplace.json
 claude plugin validate skills
+bun test kilo/
 python3 -B -m unittest discover -s tests -v
 git diff --check
 ```
@@ -25,6 +29,69 @@ repository boundaries, nearest-state selection, and symlink rejection.
 Reset tests cover read-only preview, confirmed backup/reset, stale confirmation,
 legacy and partial notes, nested projects, repeated backups, rejected symlinks,
 backup/write failures, and restoring incomplete onboarding after reset.
+
+## Kilo plugin
+
+The root `package.json` exposes `exports["./server"]` → `kilo/server.ts`, a
+self-contained server module (type-only imports; no npm runtime dependencies). It
+registers `/vibe-wise:learn` and `/vibe-wise:reset` through the `config` hook,
+restores learning context once per session via `experimental.chat.system.transform`
+and re-arms it on the `session.compacted` event (not in
+`experimental.session.compacting`, which runs before the compaction model request
+would consume the re-arm), and reuses `skills/reset/reset.py` unchanged. Learning
+behavior stays single-source: both `SKILL.md` files branch to `kilo.md` beside the
+existing `codex.md`, and the command templates carry the plugin's absolute root so
+`${CLAUDE_PLUGIN_ROOT}` isn't needed.
+
+`kilo/state.ts` ports the read-only lookup in `hooks/session_start.py` (`git_root`,
+`state_directory`, `profile_is_active`); `hooks/session_start.py` is the reference
+implementation, so update both together. The port streams `profile.md` in bounded
+chunks with a strict UTF-8 decoder to match the reference's line-by-line,
+fails-closed behavior. `kilo/state.test.ts` covers activation, paused and blank
+profiles, missing and symlinked state, invalid UTF-8, CR-only line endings, legacy
+`.sensible-vibes` precedence, nearest-state selection, and the Git boundary.
+`kilo/server.test.ts` checks the `config` hook's commands and the once-per-session,
+`session.compacted`-re-armed system-prompt injection.
+
+For local development, add a scratch config entry pointing at the module, then start
+Kilo in a project with notes:
+
+```json
+{
+  "$schema": "https://app.kilo.ai/config.json",
+  "plugin": ["file:///absolute/path/to/vibe-wise/kilo/server.ts"]
+}
+```
+
+Diagnose load problems with `kilo --print-logs --log-level DEBUG`. Confirm the module
+loads, that a new session with an active `.vibe-wise/profile.md` injects the restore
+instruction, that a paused profile injects nothing, and that a restart and `/compact`
+re-inject. Do not set `KILO_PURE=1` during these checks.
+
+The plugin is not yet exercised against a live Kilo build in the original development
+environment (no `kilo` CLI on `PATH`), so `engines` is intentionally omitted from
+`package.json`. Record the verified minimum Kilo version and add a tested range once
+one is measured.
+
+### Kilo Marketplace submission
+
+The plugin is distributed as a git-hosted entry in
+[Kilo-Org/kilo-marketplace](https://github.com/Kilo-Org/kilo-marketplace). Fork the
+repository and add `plugins/git/github.com/nykooi1/vibe-wise/PLUGIN.yaml`:
+
+```yaml
+id: git/github.com/nykooi1/vibe-wise
+name: VibeWise
+description: Learn-first development. You design, AI writes the code, and you keep ownership of the decisions.
+category: productivity
+author: Noah Kim
+url: https://github.com/nykooi1/vibe-wise
+content: git:github.com/nykooi1/vibe-wise
+```
+
+Then run the generator, tests, and typecheck from `bin/` (Node.js 20 and pnpm 9),
+review the `plugins/marketplace.yaml` diff, and open a pull request. Do not edit
+`marketplace.yaml` by hand. Pin a ref with `@v0.1.45` if a frozen version is wanted.
 
 ## Conversation smoke tests
 

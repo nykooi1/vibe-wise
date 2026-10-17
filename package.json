@@ -1,0 +1,13 @@
+{
+  "name": "vibe-wise",
+  "version": "0.1.45",
+  "private": true,
+  "type": "module",
+  "description": "You build. AI writes. Learn how to build software while AI writes the code.",
+  "license": "MIT",
+  "exports": {
+    "./server": {
+      "import": "./kilo/server.ts"
+    }
+  }
+}
