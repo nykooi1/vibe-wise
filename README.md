@@ -15,6 +15,7 @@ For anyone who wants to learn as they build—whether you're an aspiring enginee
   - [Codex](#codex)
 - [What it feels like](#what-it-feels-like)
 - [Make it yours](#make-it-yours)
+- [Sync across computers](#sync-across-computers)
 - [Updating](#updating)
 - [License](#license)
 
@@ -23,7 +24,8 @@ For anyone who wants to learn as they build—whether you're an aspiring enginee
 You need an up-to-date [Claude Code](https://code.claude.com/docs/en/setup) or
 [Codex](https://developers.openai.com/codex), and
 [Python 3](https://www.python.org/downloads/). In Claude Code, VibeWise uses Python
-to restore learning context and reset learning notes. In Codex, only reset needs it.
+to restore learning context, reset learning notes, and run the optional vault sync. In
+Codex, only reset needs it.
 No extra Python packages are needed.
 
 ### Claude Code
@@ -256,6 +258,49 @@ project and asks **Cancel / Reset learning**. After confirmation, it backs up yo
 profile, progress, and project map inside the notes directory's `backups/` folder,
 then restarts onboarding. Source code and other projects stay untouched. To change
 your experience level or preferences, just tell the AI; no reset is needed.
+
+## Sync across computers
+
+Claude Code only. VibeWise can mirror your learning notes to a folder you choose, such as
+a cloud-synced Obsidian vault, so you can continue on another computer. It's off until
+you set a folder: when you enable the plugin, or later in `/config` (the **Vault sync
+folder** row). Leave it empty to keep notes local.
+
+| When | What happens |
+| --- | --- |
+| You send a prompt starting with `/vibe-wise:learn` | The session is marked, and notes are copied from the vault to your project. |
+| You resume a marked session | Notes are copied from the vault to your project again. |
+| A session ends | If it ran `/vibe-wise:learn`, or this computer has synced the repository before, notes are copied from your project to the vault. |
+
+Resuming a session that never ran `/vibe-wise:learn` doesn't copy anything. Each
+repository gets its own folder, `<vault>/<repository name>/`, named after the main
+repository, so Git worktrees share it. Files are copied, never deleted, and compared by
+content.
+
+A note is only overwritten when it hasn't changed on that side since the last sync, so
+newer notes win. If a note changed on both sides, the copy that would be overwritten is
+kept instead (your project's on the way in, the vault's on the way out), and the conflict
+is logged in `sync.log`.
+
+If the folder can't be reached (for example, the drive isn't mounted), the sync is skipped
+and your session carries on. Every sync is logged in
+`~/.claude/plugins/data/<plugin id>/vault-sync/sync.log`.
+
+On WSL, use the Linux path: `G:\Meu Drive\Vault` becomes `/mnt/g/Meu Drive/Vault`. Virtual
+drives such as Google Drive need mounting first: `sudo mount -t drvfs G: /mnt/g`.
+
+Limitations:
+
+- Don't use two computers at the same time; a note changed on both keeps only one copy.
+- Worktrees of the same repository share one vault folder, so don't run learning
+  sessions in two worktrees of the same repository at the same time.
+- After switching computers, wait for your cloud drive to finish syncing before running
+  `/vibe-wise:learn`.
+- A crash or killed session may skip the final push. The edits stay in your project, and
+  the next session that ends there pushes them.
+- Deleting a note on one side doesn't delete it on the other.
+- `project-map.md` describes your repository's architecture. Check your company's policy
+  before syncing work repositories to a personal drive.
 
 ## Updating
 

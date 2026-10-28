@@ -25,6 +25,13 @@ repository boundaries, nearest-state selection, and symlink rejection.
 Reset tests cover read-only preview, confirmed backup/reset, stale confirmation,
 legacy and partial notes, nested projects, repeated backups, rejected symlinks,
 backup/write failures, and restoring incomplete onboarding after reset.
+Vault sync tests cover the no-op without `vault_path`, session marking, pull, resume
+and push, the last-synced record (newer notes kept on either side, conflicts, records
+for another vault folder, record failures), pushes from unmarked sessions in already
+synced repositories, worktrees sharing one vault folder, unreachable vaults staying
+quiet for sessions that don't sync, file modes, symlink refusal, skipping `desktop.ini`
+and leftover temporary files, never deleting files, the sync log, and silent exit 0
+for malformed input.
 
 ## Conversation smoke tests
 
@@ -198,6 +205,20 @@ Verified against current first-party documentation on 2026-09-28:
 - [Anthropic's learning-output-style plugin](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/learning-output-style):
   inspected its SessionStart configuration and context injection. VibeWise
   supplies its own reasoning-first instructions and leaves implementation to AI.
+
+The `UserPromptSubmit` and `SessionEnd` hooks, and the second `SessionStart` entry
+with matcher `resume`, exist only for the optional vault sync (`hooks/vault_sync.py`).
+They do nothing unless the `vault_path` plugin option is set, which Claude Code
+exports to hooks as `CLAUDE_PLUGIN_OPTION_VAULT_PATH`. Pull (`UserPromptSubmit`, a
+`/vibe-wise:learn` prompt, which also marks the session) and resume (a marked session)
+copy vault → repo; push (`SessionEnd`) copies repo → vault for marked sessions and, since
+learning resumes without the learn prompt, for any session whose `cwd` is in a repository
+already synced on this computer. Each local state directory has a last-synced record,
+the content hash of every file as of its last sync, so a file is only overwritten when
+its destination hasn't changed since then; when both sides changed, the destination is
+kept and the conflict logged. Session markers, records (`bases/`), and the sync log live
+in `${CLAUDE_PLUGIN_DATA}/vault-sync/`. Sync is Claude Code only; VibeWise registers no
+Codex hooks.
 
 No `PreCompact` hook is needed: it doesn't provide an opportunity for Claude to
 save learning notes through `additionalContext`. Save notes at meaningful events

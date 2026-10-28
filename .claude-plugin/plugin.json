@@ -1,9 +1,17 @@
 {
   "name": "vibe-wise",
-  "version": "0.1.44",
+  "version": "0.1.45",
   "description": "You build. AI writes. Learn how to build software while Claude writes the code.",
   "author": { "name": "Noah Kim" },
   "repository": "https://github.com/nykooi1/vibe-wise",
   "license": "MIT",
-  "keywords": ["learning", "architecture", "engineering"]
+  "keywords": ["learning", "architecture", "engineering"],
+  "userConfig": {
+    "vault_path": {
+      "type": "directory",
+      "title": "Vault sync folder",
+      "description": "Optional. Folder (for example, in a cloud-synced Obsidian vault) where VibeWise mirrors each repository's learning notes, so you can continue on another computer. Leave empty to keep notes local only.",
+      "required": false
+    }
+  }
 }

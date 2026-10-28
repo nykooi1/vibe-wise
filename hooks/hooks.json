@@ -1,5 +1,5 @@
 {
-  "description": "Restore local VibeWise learning context when a session starts or compacts.",
+  "description": "Restore local VibeWise learning context when a session starts or compacts, and optionally sync learning notes with a vault folder.",
   "hooks": {
     "SessionStart": [
       {
@@ -9,6 +9,38 @@
             "type": "command",
             "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/session_start.py\"",
             "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/vault_sync.py\" resume",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/vault_sync.py\" pull",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/vault_sync.py\" push",
+            "timeout": 30
           }
         ]
       }
