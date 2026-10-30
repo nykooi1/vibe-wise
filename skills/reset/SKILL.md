@@ -10,6 +10,8 @@ Run this in the main conversation, only when explicitly invoked. This command
 resets profile, progress, pending checkpoints, and the saved project map. Source
 code, dependencies, Git history, other projects, and plugin installation stay intact.
 
+If you are running in Codex rather than Claude Code, first read [codex.md](codex.md).
+
 1. Run the read-only preview for the user's current project directory. Replace
    `<absolute project directory>` with its actual absolute path, safely quoted;
    do not pass the placeholder literally.

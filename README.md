@@ -4,19 +4,51 @@
 
 **You build. AI writes.**
 
-A Claude Code plugin that puts learning first and keeps you in control while AI writes the code you designed. Claude **asks for your approach first**, helps you examine tradeoffs, and explains unfamiliar concepts. You shape the design and decide when it's ready to implement. Claude writes the code, then explains what it changed and why.
+A plugin for **Claude Code** and **Codex** that puts learning first and keeps you in control while AI writes the code you designed. The AI **asks for your approach first**, helps you examine tradeoffs, and explains unfamiliar concepts. You shape the design and decide when it's ready to implement. The AI writes the code, then explains what it changed and why.
 
 For anyone who wants to learn as they build—whether you're an aspiring engineer, a junior developer, or an experienced engineer exploring an unfamiliar stack. Practice planning how the pieces fit together, anticipating failures, and checking the result while keeping ownership of the decisions.
 
+## Table of Contents
+
+- [Get started](#get-started)
+  - [Claude Code](#claude-code)
+  - [Codex](#codex)
+- [What it feels like](#what-it-feels-like)
+- [Make it yours](#make-it-yours)
+- [Updating](#updating)
+- [License](#license)
+
 ## Get started
 
-You need [Claude Code](https://code.claude.com/docs/en/setup) and
-[Python 3](https://www.python.org/downloads/). VibeWise uses Python to restore
-learning context and reset learning notes. No extra Python packages are needed.
+You need an up-to-date [Claude Code](https://code.claude.com/docs/en/setup) or
+[Codex](https://developers.openai.com/codex), and
+[Python 3](https://www.python.org/downloads/). In Claude Code, VibeWise uses Python
+to restore learning context and reset learning notes. In Codex, only reset needs it.
+No extra Python packages are needed.
 
-VibeWise has been approved for Anthropic's Claude directory, but isn't listed in
-the public community marketplace yet. I expect it to appear soon. In the meantime,
-install it in Claude Code through my GitHub marketplace:
+### Claude Code
+
+Install from the built-in **Anthropic Directory**. In Claude Code, run:
+
+```text
+/plugin install vibe-wise@anthropic-plugin-directory
+```
+
+Choose an installation scope and confirm. No marketplace setup is needed.
+
+Restart Claude Code in the project you want to work on, then run:
+
+```text
+/vibe-wise:learn
+```
+
+Setup asks one question at a time. Use the arrow keys and Enter for choices; pick **Use defaults** to skip preference setup. Then ask Claude to build something. Starting fresh or joining an unfamiliar repository both work. For an existing repository, Claude first inspects the code and sketches a small system map.
+
+<details>
+<summary>Alternative: install through GitHub</summary>
+
+If Anthropic Directory isn't available in your Claude Code version, use the GitHub
+marketplace. Choose one installation method; you don't need both.
 
 Run these commands **one at a time** in Claude Code. First, add the marketplace:
 
@@ -30,16 +62,33 @@ After it finishes, install the plugin:
 /plugin install vibe-wise@vibe-wise
 ```
 
-**Enable automatic updates:** open `/plugin` → **Marketplaces** → **vibe-wise** →
+Enable automatic updates through `/plugin` → **Marketplaces** → **vibe-wise** →
 **Enable auto-update**. This is off by default for third-party marketplaces.
+Restart Claude Code, then run `/vibe-wise:learn` in your project.
 
-Restart Claude Code in the project you want to work on, then run:
+</details>
 
-```text
-/vibe-wise:learn
+### Codex
+
+In a terminal, run these commands **one at a time**. First, add the marketplace:
+
+```sh
+codex plugin marketplace add nykooi1/vibe-wise
 ```
 
-Setup asks one question at a time. Use the arrow keys and Enter for choices; pick **Use defaults** to skip preference setup. Then ask Claude to build something. Starting fresh or joining an unfamiliar repository both work. For an existing repository, Claude first inspects the code and sketches a small system map.
+After it finishes, install the plugin:
+
+```sh
+codex plugin add vibe-wise@vibe-wise
+```
+
+Start Codex in your project and run `$vibe-wise:learn`. Run it again at the start
+of each Codex session, and whenever Codex seems to have lost track of learning
+mode. It resumes from your saved notes without repeating setup. To reset, run
+`$vibe-wise:reset`. Claude Code and Codex share the same `.vibe-wise/` notes.
+
+In Codex, the commands in this guide use `$` instead of `/`: `/vibe-wise:learn`
+becomes `$vibe-wise:learn`.
 
 ## What it feels like
 
@@ -56,7 +105,7 @@ steps are illustrative; intervening design discussions are omitted.
 A note can be in several folders. Deleting a folder should delete its notes.
 ```
 
-**Claude:**
+**Claude / Codex:**
 
 ```text
 ✦ Build checkpoint: Deleting a shared note
@@ -72,7 +121,7 @@ When someone deletes Travel, what should happen to that note in Summer?
 Keep it in Summer. If it has no folders left, keep the note outside any folder.
 ```
 
-**Claude:**
+**Claude / Codex:**
 
 ```text
 That separates deleting a folder from deleting a note.
@@ -89,7 +138,7 @@ A links table with note_id and folder_id. Deleting a folder removes its links,
 not the notes.
 ```
 
-**Claude:**
+**Claude / Codex:**
 
 ```text
 Each link records one membership. Several links can point to the same note;
@@ -120,7 +169,7 @@ Confirm and continue.
 
 *Later, after the remaining choices for this step are worked through...*
 
-**Claude:**
+**Claude / Codex:**
 
 ```text
 ✦ Implementation checkpoint: Folder membership
@@ -141,9 +190,9 @@ This step builds storage behavior; the UI comes later.
 Implement this step.
 ```
 
-*Claude writes the code and runs the tests.*
+*Claude or Codex writes the code and runs the tests.*
 
-**Claude:**
+**Claude / Codex:**
 
 ```text
 ✦ Implementation report: Folder membership
@@ -153,27 +202,27 @@ Implement this step.
 - Added and ran tests for shared notes and notes left without a folder; both passed.
 ```
 
-You don't need to know the answer already. Claude can explain unfamiliar concepts, sketch the relevant pieces, and help you tackle a smaller question. You stay involved in forming the plan. Answer in plain English; ask for more help or say “skip” whenever you want.
+You don't need to know the answer already. The AI can explain unfamiliar concepts, sketch the relevant pieces, and help you tackle a smaller question. You stay involved in forming the plan. Answer in plain English; ask for more help or say “skip” whenever you want.
 
 Describing what you want sets the requirements. Build Checkpoints ask you to work
 out how it should function; a feature preference doesn't approve an architecture.
 
 | Checkpoint | What happens |
 | --- | --- |
-| **Build** | You reason through how to approach the problem with Claude. |
+| **Build** | You reason through how to approach the problem with the AI. |
 | **Design** | Review the design. **Confirm and continue** records it and continues planning; no code yet. |
-| **Implementation** | Review the specific code changes. **Implement this step** authorizes Claude to make them. |
+| **Implementation** | Review the specific code changes. **Implement this step** authorizes the AI to make them. |
 
 These aren't three mandatory stops. When ready to code, the Implementation
 checkpoint also confirms the design, skipping a separate Design checkpoint.
 Both confirmations offer **Discuss** to ask questions, clarify anything confusing,
 or explore alternatives before deciding.
 
-When Claude proposes additional implementation details, it separates them from your
+When the AI proposes additional implementation details, it separates them from your
 decisions in a short list or table explaining each addition and why it matters.
 You can question or change any item before proceeding.
 
-After implementation, Claude briefly explains what changed, how the key code works,
+After implementation, the AI briefly explains what changed, how the key code works,
 why it fits your decision, any tests it added or updated and what they cover, and
 which checks ran with their results. Ask to dig deeper anywhere it's unclear.
 
@@ -189,7 +238,7 @@ Experience changes the support you get, not your ownership of decisions:
 | Intermediate | Less introductory context; explore interactions and tradeoffs. |
 | Advanced | Probe difficult constraints, failure modes, and design assumptions. |
 
-Everyone reasons first. Claude adapts to what you demonstrate and how familiar you
+Everyone reasons first. The AI adapts to what you demonstrate and how familiar you
 are with the stack. Checkpoint frequency—Light, Normal, or Frequent—is separate.
 
 - “Use fewer checkpoints.”
@@ -198,23 +247,29 @@ are with the stack. Checkpoint frequency—Light, Normal, or Frequent—is separ
 - “Just implement this one.”
 - “Pause learning.” Resume with `/vibe-wise:learn`.
 
-Preferences, learning notes, and a project map live in `.vibe-wise/` in your project. Learning mode resumes in future sessions and after compaction. Add `.vibe-wise/` to your `.gitignore` to keep your notes out of Git; the plugin won't change it silently.
+Preferences, learning notes, and a project map live in `.vibe-wise/` in your project. In a Git repository, that's the repository root, and VibeWise finds it from any subfolder. Without Git, it's the folder you start in, so always start from your project's top folder. Learning mode resumes in future sessions and after compaction. Add `.vibe-wise/` to your `.gitignore` to keep your notes out of Git; the plugin won't change it silently.
 
-No extra account, backend, or telemetry. Saved notes are included in Claude's context, so your normal Claude Code data settings still apply.
+No extra account, backend, or telemetry. Saved notes are included in the AI's context, so your normal Claude Code or Codex data settings still apply.
 
 To start learning this project from scratch, run `/vibe-wise:reset`. It shows the
 project and asks **Cancel / Reset learning**. After confirmation, it backs up your
 profile, progress, and project map inside the notes directory's `backups/` folder,
 then restarts onboarding. Source code and other projects stay untouched. To change
-your experience level or preferences, just tell Claude; no reset is needed.
+your experience level or preferences, just tell the AI; no reset is needed.
 
 ## Updating
 
-For automatic updates, open `/plugin` → **Marketplaces** → **vibe-wise** →
-**Enable auto-update**. Auto-update is off by default for third-party marketplaces.
-Claude Code notifies you after an update; restart Claude Code to load the new version.
+In Claude Code, open `/plugin` → **Installed**, select VibeWise, and choose **Update now**.
+For automatic updates, open **Marketplaces**, select the source you installed from,
+and enable auto-update if it's off.
 
-To update manually, run these in your terminal:
+To update a directory installation from your terminal:
+
+```sh
+claude plugin update vibe-wise@anthropic-plugin-directory
+```
+
+If you installed through the GitHub marketplace instead:
 
 ```sh
 claude plugin marketplace update vibe-wise
@@ -224,6 +279,18 @@ claude plugin update vibe-wise@vibe-wise
 Then restart Claude Code. Your project learning notes stay intact; no reset is needed.
 Run `claude plugin list` to check the installed version.
 [More about plugin updates](https://code.claude.com/docs/en/discover-plugins#keep-plugins-updated).
+
+For Codex, refresh the marketplace, then install the latest version:
+
+```sh
+codex plugin marketplace upgrade vibe-wise
+```
+
+```sh
+codex plugin add vibe-wise@vibe-wise
+```
+
+Then start a new Codex session.
 
 ## License
 

@@ -3,3 +3,4 @@ __pycache__/
 *$py.class
 .DS_Store
 Thumbs.db
+installed_version.json

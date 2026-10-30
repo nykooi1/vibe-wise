@@ -98,6 +98,29 @@ class SessionStartTests(unittest.TestCase):
         self.state(project)
         self.assertIn(str(project / ".vibe-wise"), self.context(cwd=project))
 
+    def test_no_git_project_ignores_parent_folder_notes(self):
+        # A session once started in a shared parent (like ~/Documents) must not
+        # supply notes to every plain project folder beneath it.
+        parent = self.root / "documents"
+        project = parent / "throwaway" / "plain-project"
+        project.mkdir(parents=True)
+        self.state(parent)
+        self.assertIsNone(self.run_hook(cwd=project))
+        empty = parent / "other"
+        empty.mkdir()
+        (empty / ".vibe-wise").mkdir()
+        nested = empty / "plain"
+        nested.mkdir()
+        self.assertIsNone(self.run_hook(cwd=nested))
+
+    def test_no_git_project_prefers_its_own_notes_over_parent_notes(self):
+        parent = self.root / "documents"
+        project = parent / "plain-project"
+        project.mkdir(parents=True)
+        self.state(parent, mode="paused")
+        self.state(project)
+        self.assertIn(str(project / ".vibe-wise"), self.context(cwd=project))
+
     def test_legacy_notes_restore_without_migration(self):
         state = self.state()
         legacy = state.with_name(".sensible-vibes")

@@ -129,6 +129,15 @@ class ResetTests(unittest.TestCase):
                 (child / ".git").mkdir()
             self.assertEqual(self.preview(child)["status"], "no_notes")
 
+    def test_no_git_folder_never_resets_parent_notes(self):
+        parent = self.root / "documents"
+        parent.mkdir()
+        state, originals = self.notes(parent)
+        plain = parent / "plain-project"
+        plain.mkdir()
+        self.assertEqual(self.preview(plain)["status"], "no_notes")
+        self.assert_originals(state, originals)
+
     def test_no_state_and_empty_state_do_not_create_files(self):
         self.assertEqual(self.preview()["status"], "no_notes")
         self.assertEqual(list(self.project.iterdir()), [self.project / ".git"])

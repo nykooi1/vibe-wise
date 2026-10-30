@@ -1,0 +1,5 @@
+interface:
+  display_name: "VibeWise Learn"
+  short_description: "Start or resume learning-first development"
+policy:
+  allow_implicit_invocation: false

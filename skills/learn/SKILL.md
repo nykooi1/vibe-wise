@@ -1,6 +1,6 @@
 ---
 name: learn
-description: Activate or resume learning-first development. You lead the design; AGY gives feedback, explains concepts, asks follow-ups, and writes the agreed code.
+description: Activate or resume learning-first development. You lead the design; the AI gives feedback, explains concepts, asks follow-ups, and writes the agreed code.
 disable-model-invocation: true
 ---
 
@@ -16,9 +16,11 @@ An ordinary build request in this mode retains that loop;
 only an explicit request to skip or pause bypasses it.
 Do not switch to a subagent or require manual coding by default.
 
-Use the `view_file` tool for plugin guides instead of printing them with shell commands.
-Use `list_dir` or `grep_search` to discover optional learner-state files before reading them.
-A missing `.vibe-wise/` directory is normal first-time setup, not an error. If a shell
+If you are running in Codex rather than Claude Code, first read [codex.md](codex.md).
+
+Use file reading tools (such as `Read` or `view_file`) for plugin guides instead of printing them with shell commands.
+Use file search tools (such as `Glob` or `list_dir`) to discover optional learner-state files before reading them. A missing
+`.vibe-wise/` directory is normal first-time setup, not an error. If a shell
 check is necessary, handle absence with an explicit conditional that succeeds;
 don't run `ls` or `dir` on a possibly missing directory or hide actual read failures.
 Keep guide reads separate from optional state checks so a missing file doesn't
@@ -29,7 +31,8 @@ make a successful instruction read look like a failed tool call.
 Starting at the current working directory, look upward for `.vibe-wise/` or legacy
 `.sensible-vibes/`, preferring `.vibe-wise/` when both exist at the same level,
 stopping at the nearest `.git` directory or file (including a worktree root).
-Use the nearest existing state directory within that boundary. Keep using legacy
+Use the nearest existing state directory within that boundary. Without Git, check
+only the current directory; don't search its parents. Keep using legacy
 notes in place; never merge, move, or reset them automatically. If there is none,
 create `.vibe-wise/` at the Git root, or current directory without Git. Do not use
 state from a parent repository, another worktree, or the installed plugin folder.

@@ -109,6 +109,8 @@ their understanding, assumptions, and uncertainties visible so you can give usef
 feedback; clicking an option doesn't reveal that reasoning.
 Use native ask_question for onboarding choices and Design or Implementation
 confirmations, not reasoning questions (text fallback if unavailable).
+Write a confirmation's summary in chat before calling the picker; the picker
+shows only the question and options.
 Reports need no question.
 Headings use `✦ <Type>: <description>` with exact labels:
 `Build checkpoint`, `Design checkpoint`, `Implementation checkpoint`, `System check`,

@@ -1,0 +1,25 @@
+{
+  "name": "vibe-wise",
+  "version": "0.1.44",
+  "description": "You build. AI writes. Learn how to build software while Codex writes the code.",
+  "author": { "name": "Noah Kim" },
+  "homepage": "https://github.com/nykooi1/vibe-wise",
+  "repository": "https://github.com/nykooi1/vibe-wise",
+  "license": "MIT",
+  "keywords": ["learning", "architecture", "engineering"],
+  "skills": "./skills/",
+  "hooks": {},
+  "interface": {
+    "displayName": "VibeWise",
+    "shortDescription": "Learn to build software while Codex writes the code",
+    "longDescription": "VibeWise puts learning first. Codex asks for your approach, helps you examine tradeoffs, and explains unfamiliar concepts. You own the design and decide when it's ready; Codex writes the agreed code and explains what it changed.",
+    "developerName": "Noah Kim",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "websiteURL": "https://github.com/nykooi1/vibe-wise",
+    "composerIcon": "./.claude-plugin/icon.svg",
+    "logo": "./assets/vibewise-icon.png",
+    "defaultPrompt": ["$vibe-wise:learn"],
+    "screenshots": []
+  }
+}

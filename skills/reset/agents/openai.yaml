@@ -1,0 +1,5 @@
+interface:
+  display_name: "VibeWise Reset"
+  short_description: "Back up learning notes and restart onboarding"
+policy:
+  allow_implicit_invocation: false
