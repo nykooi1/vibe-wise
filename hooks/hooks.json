@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/session_start.py\"",
+            "command": "python \"${CLAUDE_PLUGIN_ROOT}/hooks/session_start.py\"",
             "timeout": 5
           }
         ]
