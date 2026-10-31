@@ -28,8 +28,13 @@ def profile_is_active(path):
             # Reading line by line avoids loading all its contents into memory.
             for line in stream:
                 has_content = has_content or bool(line.strip())
-                if re.fullmatch(r"Learning mode:\s*paused\s*", line, re.IGNORECASE):
-                    return False
+                # An explicit mode marker must be valid; malformed values are
+                # treated as inactive instead of silently enabling learning.
+                if re.match(r"\s*Learning mode\s*:", line, re.IGNORECASE):
+                    if not re.fullmatch(
+                        r"\s*Learning mode\s*:\s*active\s*", line, re.IGNORECASE
+                    ):
+                        return False
     except (OSError, UnicodeError):
         # Missing, unreadable, or invalid text isn't evidence of active learning.
         return False
