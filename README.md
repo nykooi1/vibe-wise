@@ -226,6 +226,8 @@ are with the stack. Checkpoint frequency—Light, Normal, or Frequent—is separ
 - “Focus on backend architecture.”
 - “Use multiple-choice questions.”
 - “Just implement this one.”
+- “Use Learn-light.” Work through unfamiliar topics with short guided choices. Say
+  “stop Learn-light” to return to your previous Learn preferences.
 - “Pause learning.” Resume with `/skill:learn` in Pi or `/vibe-wise:learn` in Claude Code.
 
 Learning notes use three scopes:
