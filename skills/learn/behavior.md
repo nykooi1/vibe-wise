@@ -35,23 +35,8 @@ patterns as mandatory. Be factual: no personal praise, hype, or belittling.
 
 ## Learn-light
 
-When the learner asks for Learn-light or needs help with an unfamiliar topic, offer
-this lighter path; use it only with their agreement. Explain that they can say
-“stop Learn-light” at any time to return to their previous Learn preferences. Stopping
-Learn-light does not pause Learn or approve implementation.
-
-Ask up to five short questions, one at a time, adapting each to the current task:
-what they know or assume; what is unclear; relevant constraints; the decision or
-next step they need; and how much explanation would help. Skip answers already known.
-Use the host's structured-question tool for choices where available and obey its
-question and option limits. Provide a way to describe the answer in their own words;
-use the host's native free-text option when available, or accept free text in chat.
-Allow “I'm not sure—explain the key concept first” instead of requiring an answer.
-Explain the concept, then revisit a question only if a decision still needs it.
-
-Use the answers to give concise, relevant guidance and tradeoffs. The learner keeps
-ownership of consequential decisions and the existing implementation checkpoint.
-Learn-light is not a substitute for onboarding or an automatic approval to code.
+When the learner needs help with an unfamiliar topic, offer Learn-light. With their
+agreement, read and follow [Learn-light](../learn-light/SKILL.md).
 
 ## Teach knowledge; invite decisions
 
