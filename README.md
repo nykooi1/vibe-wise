@@ -13,6 +13,8 @@ For anyone who wants to learn as they build—whether you're an aspiring enginee
 - [Get started](#get-started)
   - [Claude Code](#claude-code)
   - [Codex](#codex)
+  - [Google Antigravity](#google-antigravity)
+  - [GitHub Copilot](#github-copilot)
 - [What it feels like](#what-it-feels-like)
 - [Make it yours](#make-it-yours)
 - [Updating](#updating)
@@ -89,6 +91,45 @@ mode. It resumes from your saved notes without repeating setup. To reset, run
 
 In Codex, the commands in this guide use `$` instead of `/`: `/vibe-wise:learn`
 becomes `$vibe-wise:learn`.
+
+### Google Antigravity
+
+Antigravity can install VibeWise from this repository. In the Antigravity CLI,
+validate and install the plugin locally:
+
+```sh
+agy plugin validate --strict .
+agy plugin install .
+```
+
+Restart Antigravity in the project you want to work on, then invoke `/learn`.
+Use `/reset` to preview and confirm a reset. The plugin restores saved project
+notes through its `SessionStart` hook when the profile is active.
+
+For marketplace distribution, use the manifest at
+`.antigravity-plugin/plugin.json` and submit the plugin through Antigravity's
+Marketplace publishing flow.
+
+### GitHub Copilot
+
+The root `plugin.json` packages VibeWise in the Agent Plugins 1.0 format.
+Copilot-specific hook configuration is in `com.github.copilot/hooks/hooks.json`.
+
+For a local CLI install:
+
+```sh
+copilot plugin install .
+copilot plugin list
+```
+
+Start a Copilot session in the project and invoke `/learn`. Use
+`/reset` to preview and reset the project's notes. A Copilot
+`sessionStart` hook restores context only when an active project profile exists.
+
+For VS Code or the Copilot app, install the plugin through the supported
+Customization Marketplace or from this repository source. Component support can
+differ between Copilot surfaces; verify the installed skill and hook in the
+same harness and surface you intend to support.
 
 ## What it feels like
 

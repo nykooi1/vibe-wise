@@ -11,6 +11,8 @@ resets profile, progress, pending checkpoints, and the saved project map. Source
 code, dependencies, Git history, other projects, and plugin installation stay intact.
 
 If you are running in Codex rather than Claude Code, first read [codex.md](codex.md).
+If you are running in GitHub Copilot, first read [copilot.md](copilot.md).
+If you are running in Google Antigravity, first read [antigravity.md](antigravity.md).
 
 1. Run the read-only preview for the user's current project directory. Replace
    `<absolute project directory>` with its actual absolute path, safely quoted;

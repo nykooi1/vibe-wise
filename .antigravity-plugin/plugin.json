@@ -1,0 +1,20 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "vibe-wise",
+  "displayName": "VibeWise",
+  "version": "0.1.44",
+  "description": "A learning-first coding workflow for Antigravity.",
+  "logo": "assets/vibewise-icon.png",
+  "suggestedPrompts": [
+    "Start learning with VibeWise",
+    "Resume my project learning context",
+    "Reset this project's learning notes"
+  ],
+  "author": {
+    "name": "Noah Kim"
+  },
+  "homepage": "https://github.com/thefearlesscoder/vibe-wise",
+  "repository": "https://github.com/thefearlesscoder/vibe-wise",
+  "license": "MIT",
+  "keywords": ["learning", "architecture", "engineering"]
+}

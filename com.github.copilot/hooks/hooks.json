@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "exec": "python3",
+        "args": [
+          "${PLUGIN_ROOT}/hooks/session_start_copilot.py"
+        ],
+        "timeoutSec": 5
+      }
+    ]
+  }
+}

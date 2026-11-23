@@ -1,0 +1,13 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "vibe-wise",
+  "version": "0.1.44",
+  "description": "A learning-first coding workflow for GitHub Copilot.",
+  "author": {
+    "name": "Noah Kim"
+  },
+  "homepage": "https://github.com/thefearlesscoder/vibe-wise",
+  "repository": "https://github.com/thefearlesscoder/vibe-wise",
+  "license": "MIT",
+  "keywords": ["learning", "architecture", "engineering"]
+}
