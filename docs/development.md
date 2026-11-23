@@ -14,6 +14,30 @@ python3 -B -m unittest discover -s tests -v
 git diff --check
 ```
 
+## Other host adapters
+
+The plugin supports host-specific wrappers around the shared learning skills:
+
+- Antigravity: `.antigravity-plugin/plugin.json`, root `hooks.json`, and
+  `hooks/session_start_antigravity.py`.
+- GitHub Copilot: root `plugin.json`,
+  `com.github.copilot/hooks/hooks.json`, and
+  `hooks/session_start_copilot.py`.
+- Copilot marketplace catalog: `.github/plugin/marketplace.json`.
+
+The host adapters receive their native session payload and emit only their
+native session-start output contract. They do not copy or migrate learner
+notes, and they stay quiet when no active profile exists.
+
+When these CLIs are available, add them to local validation:
+
+```sh
+agy plugin validate --strict .
+agy plugin install .
+copilot plugin install .
+copilot plugin list
+```
+
 The tests execute the registered hook command with real JSON stdin in temporary
 projects. They cover activation, restoration, partial onboarding, paused mode,
 subdirectories, repository/worktree boundaries, missing/invalid files, symlinks,

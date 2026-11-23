@@ -1,0 +1,11 @@
+{
+  "vibe-wise-session": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "python3 ./hooks/session_start_antigravity.py",
+        "timeout": 5
+      }
+    ]
+  }
+}

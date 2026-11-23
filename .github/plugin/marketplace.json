@@ -1,0 +1,16 @@
+{
+  "name": "vibe-wise",
+  "owner": {
+    "name": "The Fearless Coder"
+  },
+  "metadata": {
+    "description": "Learning-first AI-assisted software development."
+  },
+  "plugins": [
+    {
+      "name": "vibe-wise",
+      "source": "./",
+      "description": "Learn how to build software while Copilot writes the code."
+    }
+  ]
+}

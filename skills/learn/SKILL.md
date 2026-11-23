@@ -17,6 +17,8 @@ only an explicit request to skip or pause bypasses it.
 Do not switch to a subagent or require manual coding by default.
 
 If you are running in Codex rather than Claude Code, first read [codex.md](codex.md).
+If you are running in GitHub Copilot, first read [copilot.md](copilot.md).
+If you are running in Google Antigravity, first read [antigravity.md](antigravity.md).
 
 Use the Read tool for plugin guides instead of printing them with Bash `cat`.
 Use Glob to discover optional learner-state files before reading them. A missing
