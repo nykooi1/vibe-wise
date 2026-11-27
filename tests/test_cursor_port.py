@@ -1,5 +1,6 @@
 """The copied Cursor port must be self-contained and stay in sync with the source."""
 
+import importlib.util
 import json
 from pathlib import Path
 import re
@@ -14,14 +15,12 @@ ROOT = Path(__file__).resolve().parents[1]
 PORT = ROOT / "ports/cursor"
 CURSOR = PORT / ".cursor"
 
-VENDORED = {
-    "hooks/session_start.py": CURSOR / "vibe-wise/hooks/session_start.py",
-    "skills/learn/SKILL.md": CURSOR / "vibe-wise/skills/learn/SKILL.md",
-    "skills/learn/behavior.md": CURSOR / "vibe-wise/skills/learn/behavior.md",
-    "skills/learn/onboarding.md": CURSOR / "vibe-wise/skills/learn/onboarding.md",
-    "skills/learn/state-templates.md": CURSOR / "vibe-wise/skills/learn/state-templates.md",
-    "skills/reset/reset.py": CURSOR / "vibe-wise/skills/reset/reset.py",
-}
+REFRESH = ROOT / "scripts/refresh-cursor-port.py"
+spec = importlib.util.spec_from_file_location("refresh_cursor_port", REFRESH)
+refresh = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(refresh)
+
+VENDORED = {source: PORT / destination for source, destination in refresh.VENDORED.items()}
 
 DOCS = (
     CURSOR / "rules/vibe-wise.mdc",

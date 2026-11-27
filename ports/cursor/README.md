@@ -40,12 +40,14 @@ Python 3 is needed only for `/reset`.
 - **Vendored guides.** Behavior, onboarding, state templates, and the reset
   helper are byte-identical copies of the canonical files at this commit. The
   copied tree cannot reach back into this repository, so the port carries them
-  rather than linking. Re-copy `.cursor/` after `git pull` to pick up guide
-  changes; existing notes are untouched.
+  rather than linking. Maintainers refresh them with
+  `scripts/refresh-cursor-port.py` (`--check` reports stale copies); users
+  re-copy `.cursor/` after `git pull`. Existing notes are untouched.
 - Everything else — checkpoints, confirmations, evidence rules, state format —
   is identical, so notes work in both harnesses.
 
-`tests/test_cursor_port.py` keeps the copies in sync with the canonical files
-and checks that the copied tree resolves and runs from a project root itself.
+`scripts/refresh-cursor-port.py` rewrites the copies from the canonical
+sources, and `tests/test_cursor_port.py` keeps them in sync plus checks that
+the copied tree resolves and runs from a project root itself.
 
 MIT — same [LICENSE](../../LICENSE) as the plugin.
