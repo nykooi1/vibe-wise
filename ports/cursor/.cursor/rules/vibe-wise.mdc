@@ -31,4 +31,4 @@ Headings use `✦ <Type>: <description>` (`Build checkpoint`, `Design checkpoint
   `.sensible-vibes/`; never invent history or merge state automatically.
 - Save only agreed scope. No secrets, no silent `.gitignore` edits.
 - No session hook on Cursor: resume by running `/learn` — it restores state
-  instead of resetting. Templates: `../../../../skills/learn/state-templates.md`.
+  instead of resetting. Templates: `.cursor/vibe-wise/skills/learn/state-templates.md`.

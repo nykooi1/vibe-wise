@@ -12,9 +12,10 @@ gives feedback, explains concepts, asks follow-ups, and writes the agreed code.
 3. **Fresh start:** run onboarding one question at a time in plain text
    (project → experience → preferences; "Use defaults" skips to Normal
    checkpoints, open-ended reasoning, AI writes code). Templates:
-   `../../../../skills/learn/state-templates.md`.
+   `.cursor/vibe-wise/skills/learn/state-templates.md`.
 4. Continue the build task in the learning loop (checkpoints above). Invoking
    `/learn` again resumes — it never resets. Reset lives in `reset.md`.
 
-Full behavior: `../../../../skills/learn/behavior.md`. Onboarding flow:
-`../../../../skills/learn/onboarding.md`.
+Full behavior: `.cursor/vibe-wise/skills/learn/behavior.md`. Onboarding flow:
+`.cursor/vibe-wise/skills/learn/onboarding.md`. All paths are relative to the
+project root.
