@@ -13,6 +13,7 @@ For anyone who wants to learn as they build—whether you're an aspiring enginee
 - [Get started](#get-started)
   - [Claude Code](#claude-code)
   - [Codex](#codex)
+- [Other harnesses](#other-harnesses)
 - [What it feels like](#what-it-feels-like)
 - [Make it yours](#make-it-yours)
 - [Updating](#updating)
@@ -291,6 +292,12 @@ codex plugin add vibe-wise@vibe-wise
 ```
 
 Then start a new Codex session.
+
+## Other harnesses
+
+- **Cursor IDE:** [`ports/cursor`](ports/cursor/) packages the loop as
+  always-on rules plus `/learn` and `/reset` commands (no session hook —
+  state resumes on `/learn`). Answers #13.
 
 ## License
 
