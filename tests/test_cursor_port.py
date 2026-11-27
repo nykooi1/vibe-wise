@@ -1,6 +1,5 @@
 """The copied Cursor port must be self-contained and stay in sync with the source."""
 
-import importlib.util
 import json
 from pathlib import Path
 import re
@@ -16,11 +15,6 @@ PORT = ROOT / "ports/cursor"
 CURSOR = PORT / ".cursor"
 
 REFRESH = ROOT / "scripts/refresh-cursor-port.py"
-spec = importlib.util.spec_from_file_location("refresh_cursor_port", REFRESH)
-refresh = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(refresh)
-
-VENDORED = {source: PORT / destination for source, destination in refresh.VENDORED.items()}
 
 DOCS = (
     CURSOR / "rules/vibe-wise.mdc",
@@ -30,19 +24,18 @@ DOCS = (
 
 
 class CursorPortTests(unittest.TestCase):
-    def test_vendored_copies_match_the_canonical_files(self):
-        for source, copy in VENDORED.items():
-            with self.subTest(source=source):
-                self.assertEqual(
-                    (ROOT / source).read_bytes(),
-                    copy.read_bytes(),
-                    f"{copy} is a stale copy of {source}",
-                )
+    def test_vendored_copies_are_current(self):
+        result = subprocess.run(
+            [sys.executable, str(REFRESH), "--check"],
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def test_referenced_paths_live_inside_the_copied_tree(self):
         for doc in DOCS:
             text = doc.read_text(encoding="utf-8")
-            self.assertNotIn("../../", text, f"{doc} reaches outside the copied tree")
+            self.assertNotIn("../", text, f"{doc} reaches outside the copied tree")
             for ref in re.findall(r"([\w./-]*skills/[\w./-]+)", text):
                 with self.subTest(doc=doc.name, ref=ref):
                     self.assertTrue(

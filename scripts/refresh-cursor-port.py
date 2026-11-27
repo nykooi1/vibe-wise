@@ -34,7 +34,7 @@ def main():
     )
     args = parser.parse_args()
 
-    stale = []
+    stale = 0
     for source, destination in VENDORED.items():
         expected = (ROOT / source).read_bytes()
         target = PORT / destination
@@ -45,7 +45,7 @@ def main():
         if current == expected:
             print(f"ok      {destination}")
             continue
-        stale.append(destination)
+        stale += 1
         print(f"{'stale  ' if args.check else 'updated'} {destination}")
         if not args.check:
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -53,7 +53,7 @@ def main():
 
     if stale and args.check:
         print(
-            f"{len(stale)} vendored file(s) out of date; "
+            f"{stale} vendored file(s) out of date; "
             "run python3 scripts/refresh-cursor-port.py",
             file=sys.stderr,
         )
